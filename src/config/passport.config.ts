@@ -1,57 +1,45 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import dotenv from "dotenv";
-import User from "../models/user.model"; // Ensure this path is correct
+import { Request } from "express";
+import { sequelize } from "../config/sequelize.config";
+import User from "../models/user.model";
 
-dotenv.config();
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((obj, done) => {
+  done(null, 
+    obj as any);
+});
 
 passport.use(
   new GoogleStrategy(
     {
-      clientID: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      callbackURL: process.env.CALLBACK_URL,
+      clientID: process.env.CLIENT_ID!,
+      clientSecret: process.env.CLIENT_SECRET!,
+      callbackURL: "http://localhost:7001/auth/google/callback", // Adjust callback URL as per your setup
     },
     async (_accessToken, _refreshToken, profile, done) => {
-      const email = profile.emails![0].value;
       try {
-        let user = await User.findOne({ where: { email: email } });
+        // Check if the user already exists in the database
+        let user = await User.findOne({ where: { googleId: profile.id } });
+
         if (!user) {
+          // If user does not exist, create a new user
           user = await User.create({
-            googleId: profile.id,
-            email: email,
-            name: profile.displayName,
+            displayName: profile.displayName,
+            email: profile.emails ? profile.emails[0].value : null,
+            picture: profile.photos ? profile.photos[0].value : null,
           });
         }
-        done(null, user);
+
+        return done(null, user);
       } catch (error) {
-        if (error instanceof Error) {
-          done(error);
-        } else {
-          done(new Error("An unknown error occurred"));
-        }
+        return done(error as Error);
       }
     }
   )
 );
 
-passport.serializeUser((user: any, done) => {
-  done(null, user.id);
-});
-
-passport.deserializeUser(async (id: string, done) => {
-  try {
-    const userId = parseInt(id);
-    const user = await User.findByPk(userId);
-    if (!user) {
-      return done(new Error("User not found"));
-    }
-    done(null, user);
-  } catch (error) {
-    if (error instanceof Error) {
-      done(error);
-    } else {
-      done(new Error("An unknown error occurred"));
-    }
-  }
-});
+export default passport;
