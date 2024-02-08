@@ -1,23 +1,26 @@
 import { Request, Response } from "express";
 import { sendEmailWithOTP } from "../utils/mailer.util"; // Ensure this path is correct
 import { generateToken, verifyToken } from "../utils/jwt.util"; // Ensure this path is correct
-import {Otp} from "../entity/otp.model"; // Ensure this path is correct
+import { Otp } from "../entity/otp.model"; // Ensure this path is correct
 import { verifyToke } from "../interfaces/verifyToken.interface";
-
+import AppDataSource from "../config/database.config";
+import { OtpInterface } from "../interfaces/Otp.interface";
+const currOtp = AppDataSource.getRepository(Otp);
 export const sendOTP = async (req: Request, res: Response) => {
+  try {
   const { email } = req.body;
   const otp = Math.floor(1000 + Math.random() * 9000).toString();
   const expiry = new Date();
   expiry.setMinutes(expiry.getMinutes() + 10); // OTP expiry set to 10 minutes from now
 
-  try {
+  
     // Save OTP to database
-    // await Otp.create({
-    //   email,
-    //   otp,
-    //   expiry,
-    // });
-
+    const generatedOtp = currOtp.create({
+      email,
+      otp,
+      expiry,
+    } as OtpInterface);
+    await currOtp.save(generatedOtp);
     // Optionally send OTP via email
     await sendEmailWithOTP(email, otp);
 

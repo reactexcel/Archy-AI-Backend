@@ -10,6 +10,6 @@ export class Otp {
   @Column()
   otp!: string;
   @Column()
-  expiry!: string;
+  expiry!: Date;
   
 }
