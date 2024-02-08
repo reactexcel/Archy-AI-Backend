@@ -12,6 +12,7 @@ const app = express();
 const PORT = process.env.PORT || 7001;
 
 app.use(cors());
+
 app.use(express.json());
 app.use(passport.initialize()); // Initialize Passport middleware
 
@@ -34,6 +35,7 @@ app.use("/api/auth", signupRoutes);
 app.use("/api/auth", signinRoutes);
 
 export function connection(){
+  try{
   AppDataSource
     .initialize()
     .then(() => {
@@ -42,8 +44,8 @@ export function connection(){
         console.log(`server is running on PORT ${PORT}`);
       });
     })
-    .catch((error) => {
-      console.log(error);
-    });}
+   }catch(error){
+      console.error(error)
+    }}
 
     connection();

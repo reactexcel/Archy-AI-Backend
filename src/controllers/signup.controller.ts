@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { sendEmailWithOTP } from "../utils/mailer.util"; // Ensure this path is correct
 import { generateToken, verifyToken } from "../utils/jwt.util"; // Ensure this path is correct
 import {Otp} from "../entity/otp.model"; // Ensure this path is correct
+import { verifyToke } from "../interfaces/verifyToken.interface";
 
 export const sendOTP = async (req: Request, res: Response) => {
   const { email } = req.body;
@@ -35,12 +36,7 @@ export const verifyOTP = (req: Request, res: Response) => {
   const token = req.headers.authorization?.split(" ")[1] || "";
 
   try {
-    const decoded = verifyToken(token) as {
-      email: string;
-      otp: string;
-      iat: number;
-      exp: number;
-    };
+    const decoded = verifyToken(token) as verifyToke;
     if (decoded.otp === otp) {
       res.json({ message: "OTP verified successfully" });
     } else {
