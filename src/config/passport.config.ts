@@ -1,7 +1,6 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { Request } from "express";
-// import { sequelize } from "../config/sequelize.config";
 // import User from "../entity/user.model";
 import dotenv from "dotenv";
 
