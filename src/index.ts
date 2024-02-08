@@ -1,10 +1,13 @@
 import express, { Request } from "express";
 import passport from "../src/config/passport.config";
-import { sequelize } from "./config/database.config";
+// import { sequelize } from "./config/sequelize.config";
 import signupRoutes from "./routes/signup.routes";
 import signinRoutes from "./routes/signin.routes";
 import cors from "cors";
+import AppDataSource from "./config/database.config"
+import dotenv from "dotenv";
 
+dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 7001;
 
@@ -30,14 +33,17 @@ app.get(
 app.use("/api/auth", signupRoutes);
 app.use("/api/auth", signinRoutes);
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on PORT ${PORT}`);
-  sequelize
-    .sync({ force: false })
+export function connection(){
+  AppDataSource
+    .initialize()
     .then(() => {
-      console.log("Connected to PostgreSQL Database");
+      console.log("postgres connected");
+      app.listen(PORT, () => {
+        console.log(`server is running on PORT ${PORT}`);
+      });
     })
-    .catch((err) => {
-      console.error("Unable to connect to PostgreSQL Database", err);
-    });
-});
+    .catch((error) => {
+      console.log(error);
+    });}
+
+    connection();
