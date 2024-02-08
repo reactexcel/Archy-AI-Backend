@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { sendEmailWithOTP } from "../utils/mailer.util"; // Ensure this path is correct
 import { generateToken, verifyToken } from "../utils/jwt.util"; // Ensure this path is correct
-import Otp from "../models/otp.model"; // Ensure this path is correct
+import {Otp} from "../entity/otp.model"; // Ensure this path is correct
 
 export const sendOTP = async (req: Request, res: Response) => {
   const { email } = req.body;
@@ -11,11 +11,11 @@ export const sendOTP = async (req: Request, res: Response) => {
 
   try {
     // Save OTP to database
-    await Otp.create({
-      email,
-      otp,
-      expiry,
-    });
+    // await Otp.create({
+    //   email,
+    //   otp,
+    //   expiry,
+    // });
 
     // Optionally send OTP via email
     await sendEmailWithOTP(email, otp);
