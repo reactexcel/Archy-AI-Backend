@@ -8,12 +8,13 @@ const otpRepository = AppDataSource.getRepository(Otp);
 import { v4 as uuidv4 } from 'uuid';
 
 export const sendOTP = async (req: Request, res: Response) => {
+  try {
   const { email } = req.body;
   const newOtp = Math.floor(1000 + Math.random() * 9000).toString();
   const expiry = new Date();
   expiry.setMinutes(expiry.getMinutes() + 10); // OTP expiry set to 10 minutes from now
 
-  try {
+  
     // Save OTP to database
 
     const otp = new Otp();
@@ -61,3 +62,4 @@ export const verifyOTP = (req: Request, res: Response) => {
     }
   }
 };
+
