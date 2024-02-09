@@ -11,9 +11,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/express-session": "^1.17.10",
     "@types/passport": "^1.0.16",
     "@types/passport-google-oauth20": "^2.0.14",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.1",
     "express": "^4.18.2",
