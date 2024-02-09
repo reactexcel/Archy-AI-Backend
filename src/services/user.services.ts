@@ -6,9 +6,9 @@ import { User } from "../entity/user.model";
 import { generateToken } from "../utils/jwt.util";
 const curr_User = AppDataSource.getRepository(User);
 export const registerService = async (req: Request, res: Response) => {
-  const { username, email, password ,locations,profileImage} = req.body;
+  const { username, email, password, locations, profileImage } = req.body;
   try {
-     const existingUserEmail = await curr_User.findOneBy({
+    const existingUserEmail = await curr_User.findOneBy({
       email,
     });
     if (existingUserEmail) {
@@ -21,7 +21,7 @@ export const registerService = async (req: Request, res: Response) => {
       email,
       password: hashPassword,
       locations,
-      profileImage
+      profileImage,
     });
 
     const saveUser = await curr_User.save(user);
@@ -58,10 +58,9 @@ export const loginService = async (
 
 export const updateProfileService = async (req: Request, res: Response) => {
   const userId = req.params.id;
-  const { username, email,password, newPassword, locations } = req.body;
-
+  const { username, password, newPassword, locations } = req.body;
   // Check if the user exists
-  const user = await curr_User.findOne({ where: { id: userId } });
+  let user = await curr_User.findOne({ where: { id: userId } });
 
   if (!user) {
     return res.status(404).json({ message: "User not found" });
@@ -72,9 +71,15 @@ export const updateProfileService = async (req: Request, res: Response) => {
   }
   const hashPassword = await bcrypt.hash(newPassword, 10);
   // Update the user profile
-  user.username = username;
-  user.email = email;
-  user.password = hashPassword;
-  user.locations = locations;
-  return await curr_User.save(user);
-};
+  const update: Partial<User> = {};
+  if (username) update.username = username;
+  if (hashPassword) update.password = hashPassword;
+  if (locations) update.locations = locations;
+   const {affected}=await curr_User.update({ id: userId }, update);
+   if(affected){
+   if(affected<0){
+  return curr_User.find({where:{id:userId}});}
+}else{
+  return res.status(404).json({ message: "not updated" });
+
+};}

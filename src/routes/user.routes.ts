@@ -20,6 +20,6 @@ router.get("/google/callback", redirect);
 // router.post("/signIn", signIn);
 router.post("/signIn", loginCtrl);
 router.get("/get-user", getAllCtrl);
-router.post("/update-profile", updateProfile);
+router.put("/update-profile", updateProfile);
 
 export default router;

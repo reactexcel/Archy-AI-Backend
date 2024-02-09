@@ -2,7 +2,7 @@ import express, { Request } from "express";
 import "reflect-metadata"
 import passport from "../src/config/passport.config";
 import userRoutes from "./routes/user.routes";
-import signinRoutes from "./routes/signin.routes";
+// import signinRoutes from "./routes/signin.routes";
 import cors from "cors";
 import AppDataSource from "./config/database.config"
 import dotenv from "dotenv";
@@ -33,7 +33,7 @@ app.get(
 );
 
 app.use("/api/auth", userRoutes);
-app.use("/api/auth", signinRoutes);
+// app.use("/api/auth", signinRoutes);
 
 export function connection(){
   try{

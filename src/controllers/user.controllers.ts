@@ -30,7 +30,7 @@ export const loginCtrl = async (req:Request, res:Response) => {
   try {
     const { email, password } = req.body;
     const access_token  = await loginService(email, password, res);
-    res.status(200).json({ message:"Successfully Logged In",jwt: access_token });
+    res.status(200).json({ message:"Successfully Logged In",token: access_token });
   } catch (error) {
     console.error(error);
     res.status(500).send("Server Error");
@@ -54,7 +54,9 @@ export const getAllCtrl = async (req:Request, res:Response) => {
 export const updateProfile=async(req:Request,res:Response)=>{
   try{
  const user=await updateProfileService(req,res);
-
+if(!user){
+  res.status(404).json({ message: 'user not found' });
+}
     res.status(200).json({ message: 'User profile updated successfully', user });
   } catch (error) {
     console.error('Error updating user profile:', error);
