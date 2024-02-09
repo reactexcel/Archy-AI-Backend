@@ -7,7 +7,14 @@ export class User {
   @Column()
   email!: string; 
   @Column()
-  otp!: string;
+  password!: string;
+  @Column()
+  locations!: string; 
+  @Column()
+  username!: string;
+  @Column()
+  profileImage!: string;
+
 }
 
 

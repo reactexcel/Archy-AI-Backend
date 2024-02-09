@@ -1,7 +1,7 @@
 import express, { Request } from "express";
 import "reflect-metadata"
 import passport from "../src/config/passport.config";
-import signupRoutes from "./routes/signup.routes";
+import userRoutes from "./routes/user.routes";
 import signinRoutes from "./routes/signin.routes";
 import cors from "cors";
 import AppDataSource from "./config/database.config"
@@ -32,7 +32,7 @@ app.get(
   }
 );
 
-app.use("/api/auth", signupRoutes);
+app.use("/api/auth", userRoutes);
 app.use("/api/auth", signinRoutes);
 
 export function connection(){
