@@ -8,12 +8,11 @@ import { OtpInterface } from "../interfaces/Otp.interface";
 const currOtp = AppDataSource.getRepository(Otp);
 export const sendOTP = async (req: Request, res: Response) => {
   try {
-  const { email } = req.body;
-  const otp = Math.floor(1000 + Math.random() * 9000).toString();
-  const expiry = new Date();
-  expiry.setMinutes(expiry.getMinutes() + 10); // OTP expiry set to 10 minutes from now
+    const { email } = req.body;
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+    const expiry = new Date();
+    expiry.setMinutes(expiry.getMinutes() + 10); // OTP expiry set to 10 minutes from now
 
-  
     // Save OTP to database
     const generatedOtp = currOtp.create({
       email,
