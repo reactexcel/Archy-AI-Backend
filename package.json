@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "start": "nodemon ./src/index.ts"
+    "start": "nodemon ./src/index.ts",
+    "build": "tsc --watch"
   },
   "keywords": [],
   "author": "",
@@ -26,15 +27,17 @@
     "reflect-metadata": "^0.2.1",
     "sequelize": "^6.36.0",
     "sequelize-typescript": "^2.1.6",
-    "typeorm": "^0.3.20"
+    "typeorm": "^0.3.20",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.5",
-    "@types/node": "^20.11.16",
+    "@types/node": "^20.11.17",
     "@types/nodemailer": "^6.4.14",
+    "@types/uuid": "^9.0.8",
     "nodemon": "^3.0.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"

@@ -5,7 +5,7 @@ export class User {
   @PrimaryColumn()
   id!: string;
   @Column()
-  email!: string;
+  email!: string; 
   @Column()
   otp!: string;
 }

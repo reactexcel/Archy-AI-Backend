@@ -1,11 +1,12 @@
 import express, { Request } from "express";
+import "reflect-metadata"
 import passport from "../src/config/passport.config";
-// import { sequelize } from "./config/sequelize.config";
 import signupRoutes from "./routes/signup.routes";
 import signinRoutes from "./routes/signin.routes";
 import cors from "cors";
 import AppDataSource from "./config/database.config"
 import dotenv from "dotenv";
+
 
 dotenv.config();
 const app = express();
@@ -43,7 +44,7 @@ export function connection(){
       app.listen(PORT, () => {
         console.log(`server is running on PORT ${PORT}`);
       });
-    })
+    }).catch((error:any)=> console.log(error))
    }catch(error){
       console.error(error)
     }}
