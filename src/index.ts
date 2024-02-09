@@ -1,14 +1,19 @@
 import express, { Request } from "express";
+import "reflect-metadata"
 import passport from "../src/config/passport.config";
-import { sequelize } from "./config/database.config";
 import signupRoutes from "./routes/signup.routes";
 import signinRoutes from "./routes/signin.routes";
 import cors from "cors";
+import AppDataSource from "./config/database.config"
+import dotenv from "dotenv";
 
+
+dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 7001;
 
 app.use(cors());
+
 app.use(express.json());
 app.use(passport.initialize()); // Initialize Passport middleware
 
@@ -30,14 +35,18 @@ app.get(
 app.use("/api/auth", signupRoutes);
 app.use("/api/auth", signinRoutes);
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on PORT ${PORT}`);
-  sequelize
-    .sync({ force: false })
+export function connection(){
+  try{
+  AppDataSource
+    .initialize()
     .then(() => {
-      console.log("Connected to PostgreSQL Database");
-    })
-    .catch((err) => {
-      console.error("Unable to connect to PostgreSQL Database", err);
-    });
-});
+      console.log("postgres connected");
+      app.listen(PORT, () => {
+        console.log(`server is running on PORT ${PORT}`);
+      });
+    }).catch((error:any)=> console.log(error))
+   }catch(error){
+      console.error(error)
+    }}
+
+    connection();

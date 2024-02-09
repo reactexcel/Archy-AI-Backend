@@ -1,9 +1,10 @@
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import { Otp } from "../entity/otp.model";
 
 dotenv.config();
 
-export const sendEmailWithOTP = async (email: string, otp: string) => {
+export const sendEmailWithOTP = async (email: string, otp:string) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
