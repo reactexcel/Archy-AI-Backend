@@ -95,8 +95,8 @@ export const updateProfileService = async (req: Request, res: Response) => {
   }
   const hashPassword = await bcrypt.hash(newPassword, 10);
   // Update the user profile
-  user.username = username;
-  user.password = hashPassword;
-  user.locations = locations;
+  user.username = username ||user.username;
+  user.password = hashPassword||user.password ;
+  user.locations = locations||user.locations;
   return await curr_User.save(user);
 };
