@@ -5,12 +5,19 @@ import { Otp } from "../entity/otp.model"; // Ensure this path is correct
 import AppDataSource from "../config/database.config";
 import { JwtPayload } from "jsonwebtoken";
 import { User } from "../entity/user.model";
-import { v4 as uuidv4 } from "uuid";//For unique id
+import { v4 as uuidv4 } from "uuid"; //For unique id
 import passport from "passport";
-import { loginService, registerService, updateProfileService } from "../services/user.services";
+import {
+  loginGoogleService,
+  loginService,
+  registerService,
+  updateProfileService,
+} from "../services/user.services";
 
 const otpRepository = AppDataSource.getRepository(Otp);
 const userRepository = AppDataSource.getRepository(User);
+
+//SignUp User
 export const registerCtrl = async (req: Request, res: Response) => {
   try {
     const user = await registerService(req, res);
@@ -23,21 +30,32 @@ export const registerCtrl = async (req: Request, res: Response) => {
   }
 };
 
-
-
-
-export const loginCtrl = async (req:Request, res:Response) => {
+//Login with Google
+export const loginGoogleCtrl = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
-    const access_token  = await loginService(email, password, res);
-    res.status(200).json({ message:"Successfully Logged In",token: access_token });
+    const access_token = await loginGoogleService(req, res);
   } catch (error) {
     console.error(error);
     res.status(500).send("Server Error");
   }
 };
 
-export const getAllCtrl = async (req:Request, res:Response) => {
+//Login User
+export const loginCtrl = async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+    const access_token = await loginService(email, password, res);
+    res
+      .status(200)
+      .json({ message: "Successfully Logged In", token: access_token });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error");
+  }
+};
+
+//Get All User
+export const getAllCtrl = async (req: Request, res: Response) => {
   try {
     const user = await userRepository.find();
     if (!user) {
@@ -51,20 +69,21 @@ export const getAllCtrl = async (req:Request, res:Response) => {
 };
 
 // Update user profile route
-export const updateProfile=async(req:Request,res:Response)=>{
-  try{
- const user=await updateProfileService(req,res);
-if(!user){
-  res.status(404).json({ message: 'user not found' });
-}
-    res.status(200).json({ message: 'User profile updated successfully', user });
+export const updateProfile = async (req: Request, res: Response) => {
+  try {
+    const user = await updateProfileService(req, res);
+    if (!user) {
+      res.status(404).json({ message: "user not found" });
+    }
+    res
+      .status(200)
+      .json({ message: "User profile updated successfully", user });
   } catch (error) {
-    console.error('Error updating user profile:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error("Error updating user profile:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
-
-}
-
+};
+//Send Otp
 export const sendOTP = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
@@ -94,6 +113,7 @@ export const sendOTP = async (req: Request, res: Response) => {
   }
 };
 
+//Verify Otp
 export const verifyOTP = (req: Request, res: Response) => {
   const { otp } = req.body;
   const token = req.headers.authorization?.split(" ")[1] || "";
@@ -118,28 +138,14 @@ export const verifyOTP = (req: Request, res: Response) => {
   }
 };
 
-
-
-
 export const signUpGoogle = async () => {
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  passport.authenticate("google", { scope: ["profile", "email"] });
 };
 
-export const redirect=async()=>{passport.authenticate("google", { failureRedirect: "/login" }),
-(_req: Request, res: Response) => {
-  // Successful authentication, redirect to success route or send response
-  res.redirect("/success");
-}}
-
-
-// export const signIn = async(req: Request, res: Response) => {
-//   const { email, password } = req.body;
-//   const user=await userRepository.findOne({where:{email:email}});
-// console.log(user);
-//   if (user) {
-//     const token = generateToken({ email });
-//     res.json({ message: "Sign in successfully", token });
-//   } else {
-//     res.status(401).json({ message: "Invalid Email & Password" });
-//   }
-// };
+export const redirect = async () => {
+  passport.authenticate("google", { failureRedirect: "/login" }),
+    (_req: Request, res: Response) => {
+      // Successful authentication, redirect to success route or send response
+      res.redirect("/success");
+    };
+};

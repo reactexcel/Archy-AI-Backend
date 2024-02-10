@@ -1,5 +1,3 @@
-
-
 import { Column, Entity, PrimaryColumn } from "typeorm";
 @Entity()
 export class Otp {
@@ -11,5 +9,4 @@ export class Otp {
   otp!: string;
   @Column()
   expiry!: Date;
-  
 }
