@@ -1,5 +1,5 @@
-export interface verifyToke{
-    email: string;
-    otp: string;
-    exp: Date;
-  };
+export interface verifyToke {
+  email: string;
+  otp: string;
+  exp: Date;
+}

@@ -4,7 +4,10 @@ import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcryptjs";
 import { User } from "../entity/user.model";
 import { generateToken } from "../utils/jwt.util";
+
 const curr_User = AppDataSource.getRepository(User);
+
+//Sigup Service
 export const registerService = async (req: Request, res: Response) => {
   const { username, email, password, locations, profileImage } = req.body;
   try {
@@ -27,7 +30,7 @@ export const registerService = async (req: Request, res: Response) => {
     const saveUser = await curr_User.save(user);
 
     if (!saveUser) {
-      res.status(404).json({ message: "Not found" });
+      res.status(404).json({ message: "error in saving user" });
     }
     return saveUser;
   } catch (error) {
@@ -35,6 +38,25 @@ export const registerService = async (req: Request, res: Response) => {
   }
 };
 
+//Login with google service
+export const loginGoogleService = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+  const user = await curr_User.findOneBy({
+    email,
+  });
+
+  if (!user) {
+    const newUser = await registerService(req, res);
+    res.status(200).json({ message: "Successfully registered ", newUser });
+  } else {
+    const access_token = generateToken({ id: user.id, email: user.email });
+    res
+      .status(200)
+      .json({ message: "Successfully Logged In", token: access_token });
+  }
+};
+
+//Login service
 export const loginService = async (
   email: string,
   password: string,
@@ -56,6 +78,7 @@ export const loginService = async (
   }
 };
 
+//Update Profile Service
 export const updateProfileService = async (req: Request, res: Response) => {
   const userId = req.params.id;
   const { username, password, newPassword, locations } = req.body;
@@ -65,21 +88,15 @@ export const updateProfileService = async (req: Request, res: Response) => {
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
+  //Check Old Password
   const result = bcrypt.compare(password, user.password);
   if (!result) {
     return res.status(404).json({ message: "Wrong password" });
   }
   const hashPassword = await bcrypt.hash(newPassword, 10);
   // Update the user profile
-  const update: Partial<User> = {};
-  if (username) update.username = username;
-  if (hashPassword) update.password = hashPassword;
-  if (locations) update.locations = locations;
-   const {affected}=await curr_User.update({ id: userId }, update);
-   if(affected){
-   if(affected<0){
-  return curr_User.find({where:{id:userId}});}
-}else{
-  return res.status(404).json({ message: "not updated" });
-
-};}
+  user.username = username;
+  user.password = hashPassword;
+  user.locations = locations;
+  return await curr_User.save(user);
+};
