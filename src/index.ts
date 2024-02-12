@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 7001;
 
 app.use(cors());
 app.use(express.json());
+app.use('/objects',express.static(__dirname +'/uploads'));
 // admin.initializeApp({
 //   credential: admin.credential.cert('path/to/your/firebase/credentials.json'),
 //   databaseURL: 'https://your-firebase-project.firebaseio.com'

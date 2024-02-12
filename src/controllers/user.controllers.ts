@@ -58,7 +58,7 @@ export const loginCtrl = async (req: Request, res: Response) => {
 export const getAllCtrl = async (req: Request, res: Response) => {
   try {
     const {id}:any=req.user;
-    const user = await userRepository.find({where:{id}});
+    const user = await userRepository.findOneBy({id});
     if (!user) {
       return res.status(400).send({ message: "Not found" });
     }
