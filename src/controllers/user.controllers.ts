@@ -63,7 +63,7 @@ export const getAllCtrl = async (req: Request, res: Response) => {
       return res.status(400).send({ message: "Not found" });
     }
     res.status(200).send({
-      data : user
+      user : user
     });
   } catch (error) {
     console.error(error);
