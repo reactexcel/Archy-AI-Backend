@@ -11,21 +11,19 @@ import {
   verifyOTP,
 } from "../controllers/user.controllers";
 import { upload } from "../utils/uploadImage.util";
-import { verifyUser } from "../middlewares/verifyUser";
+import { verifyFirebaseToken, verifyUser } from "../middlewares/verifyUser";
 
 const router = express.Router();
 
-router.post("/signup", registerCtrl);
+router.post("/signup",registerCtrl);
 router.post("/sendOTP", sendOTP);
 router.post("/verifyOTP", verifyOTP);
-router.get("/google", signUpGoogle);
-router.get("/google/callback", redirect);
 router.post("/signIn", loginCtrl);
-router.post("/signInGoogle", loginGoogleCtrl);
+router.post("/signInGoogle",upload.single("profile"), loginGoogleCtrl);
 router.get("/get-user", verifyUser, getAllCtrl);
 router.put(
   "/update-profile",
-  verifyUser,
+  // verifyUser,
   upload.single("profile"),
   updateProfile
 );
