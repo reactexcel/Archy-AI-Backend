@@ -33,7 +33,7 @@ export const registerCtrl = async (req: Request, res: Response) => {
 //Login with Google
 export const loginGoogleCtrl = async (req: Request, res: Response) => {
   try {
-    const access_token = await loginGoogleService(req, res);
+     await loginGoogleService(req, res);
   } catch (error) {
     console.error(error);
     res.status(500).send("Server Error");

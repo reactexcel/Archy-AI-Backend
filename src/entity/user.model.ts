@@ -11,6 +11,6 @@ export class User {
   locations!: string;
   @Column()
   username!: string;
-  @Column()
+  @Column({default:''})
   profileImage!: string;
 }
