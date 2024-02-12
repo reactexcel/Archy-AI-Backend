@@ -62,7 +62,9 @@ export const getAllCtrl = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(400).send({ message: "Not found" });
     }
-    res.status(200).send({ user });
+    res.status(200).send({
+      data : user
+    });
   } catch (error) {
     console.error(error);
     res.status(500).send("Server Error");
@@ -74,11 +76,12 @@ export const updateProfile = async (req: Request, res: Response) => {
   try {
     const user = await updateProfileService(req, res);
     if (!user) {
-      res.status(404).json({ message: "user not found" });
+     return res.status(404).json({ message: "user not found" });
     }
-    res
+    
+  return  res
       .status(200)
-      .json({ message: "User profile updated successfully", user });
+      .json({ message: "User profile updated successfully"});
   } catch (error) {
     console.error("Error updating user profile:", error);
     res.status(500).json({ message: "Internal server error" });
