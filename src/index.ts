@@ -5,6 +5,7 @@ import cors from "cors";
 import AppDataSource from "./config/database.config";
 import dotenv from "dotenv";
 import admin from 'firebase-admin';
+import path from 'path'
 
 
 dotenv.config();
@@ -13,6 +14,8 @@ const PORT = process.env.PORT || 7001;
 
 app.use(cors());
 app.use(express.json());
+app.use( express.static(path.join(__dirname, '/uploads')));
+console.log(path.join(__dirname, '/uploads'))
 // admin.initializeApp({
 //   credential: admin.credential.cert('path/to/your/firebase/credentials.json'),
 //   databaseURL: 'https://your-firebase-project.firebaseio.com'
@@ -28,7 +31,7 @@ export function connection() {
           console.log(`server is running on PORT ${PORT}`);
         });
       })
-      .catch((error: any) => console.log(error));
+      .catch((error) => console.log(error));
   } catch (error) {
     console.error(error);
   }
