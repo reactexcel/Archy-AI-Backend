@@ -22,7 +22,7 @@ router.post("/signIn", loginCtrl);
 router.post("/signInGoogle",upload.single("profile"), loginGoogleCtrl);
 router.get("/get-user", verifyUser, getAllCtrl);
 router.put(
-  "/update-profile",
+  "/update-profile/:id",
   // verifyUser,
   upload.single("profile"),
   updateProfile

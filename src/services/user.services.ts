@@ -109,11 +109,13 @@ export const loginService = async (
 
 //Update Profile Service
 export const updateProfileService = async (req: Request, res: Response) => {
-  const userId = req.params.id;
+  const {id} = req.params;
+  console.log(id)
   const { username, password, newPassword, locations } = req.body;
+  console.table(req.body)
   // Check if the user exists
-  let user = await curr_User.findOne({ where: { id: userId } });
-
+  let user = await curr_User.findOneBy( {id});
+console.log(user)
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
@@ -133,4 +135,6 @@ export const updateProfileService = async (req: Request, res: Response) => {
   user.password = hashPassword || user.password;
   user.locations = locations || user.locations;
   return await curr_User.save(user);
+  
+
 };
