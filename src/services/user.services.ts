@@ -109,31 +109,29 @@ export const loginService = async (
 
 //Update Profile Service
 export const updateProfileService = async (req: Request, res: Response) => {
-  const {id} = req.params;
-  console.log(id)
+  const { id } = req.params;
   const { username, password, newPassword, locations } = req.body;
-  console.table(req.body)
   // Check if the user exists
-  let user = await curr_User.findOneBy( {id});
+  let user = await curr_User.findOneBy({ id });
   if (!user) {
     return res.status(404).json({ message: "User not found" });
+  }
+
+  //Check Old Password
+  const result = await bcrypt.compare(password, user.password);
+  if (!result) {
+    return res.status(404).json({ message: "Wrong password" });
   }
 
   if (req.file) {
     if (fs.existsSync(user.profileImage)) fs.unlinkSync(user.profileImage);
     user.profileImage = req.file.filename;
   }
-  //Check Old Password
-  const result = bcrypt.compare(password, user.password);
-  if (!result) {
-    return res.status(404).json({ message: "Wrong password" });
-  }
   const hashPassword = await bcrypt.hash(newPassword, 10);
   // Update the user profile
   user.username = username || user.username;
   user.password = hashPassword || user.password;
   user.locations = locations || user.locations;
-  return await curr_User.save(user);
-  
-
+  await curr_User.save(user);
+  return res.status(200).json({ message: "User profile updated successfully" });
 };

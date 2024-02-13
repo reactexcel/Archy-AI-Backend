@@ -33,7 +33,7 @@ export const registerCtrl = async (req: Request, res: Response) => {
 //Login with Google
 export const loginGoogleCtrl = async (req: Request, res: Response) => {
   try {
-     await loginGoogleService(req, res);
+    await loginGoogleService(req, res);
   } catch (error) {
     console.error(error);
     res.status(500).send("Server Error");
@@ -57,13 +57,13 @@ export const loginCtrl = async (req: Request, res: Response) => {
 //Get All User
 export const getAllCtrl = async (req: Request, res: Response) => {
   try {
-    const {id}:any=req.user;
-    const user = await userRepository.findOneBy({id});
+    const { id }: any = req.user;
+    const user = await userRepository.findOneBy({ id });
     if (!user) {
       return res.status(400).send({ message: "Not found" });
     }
     res.status(200).send({
-      user : user
+      user: user,
     });
   } catch (error) {
     console.error(error);
@@ -75,13 +75,6 @@ export const getAllCtrl = async (req: Request, res: Response) => {
 export const updateProfile = async (req: Request, res: Response) => {
   try {
     const user = await updateProfileService(req, res);
-    if (!user) {
-     return res.status(404).json({ message: "user not found" });
-    }
-    
-  return  res
-      .status(200)
-      .json({ message: "User profile updated successfully"});
   } catch (error) {
     console.error("Error updating user profile:", error);
     res.status(500).json({ message: "Internal server error" });
