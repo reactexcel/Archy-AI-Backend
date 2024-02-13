@@ -24,7 +24,7 @@ export const registerService = async (req: Request, res: Response) => {
       email,
       password: hashPassword,
       locations,
-      profileImage: req.file?.path,
+      profileImage: req.file?.filename,
     });
 
     const saveUser = await curr_User.save(user);
@@ -54,7 +54,7 @@ export const registerGoogleService = async (req: Request, res: Response) => {
       email,
       password: hashPassword,
       locations,
-      profileImage: req.file?.path,
+      profileImage: req.file?.filename,
     });
     const saveUser = await curr_User.save(user);
 
@@ -115,14 +115,13 @@ export const updateProfileService = async (req: Request, res: Response) => {
   console.table(req.body)
   // Check if the user exists
   let user = await curr_User.findOneBy( {id});
-console.log(user)
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
 
   if (req.file) {
     if (fs.existsSync(user.profileImage)) fs.unlinkSync(user.profileImage);
-    user.profileImage = req.file.path;
+    user.profileImage = req.file.filename;
   }
   //Check Old Password
   const result = bcrypt.compare(password, user.password);

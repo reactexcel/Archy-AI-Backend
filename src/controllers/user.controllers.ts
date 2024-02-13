@@ -65,7 +65,7 @@ export const getAllCtrl = async (req: Request, res: Response) => {
     user.profileImage=`${__dirname}/${user.profileImage}`
     console.log(user.profileImage)
     res.status(200).send({
-      data : user
+      user : user
     });
   } catch (error) {
     console.error(error);
