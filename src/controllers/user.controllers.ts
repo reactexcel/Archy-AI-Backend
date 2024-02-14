@@ -59,15 +59,15 @@ export const loginCtrl = async (req: Request, res: Response) => {
 };
 
 //Get All User
-export const getAllCtrl = async (req: Request, res: Response) => {
+export const  getAllCtrl = async (req: Request, res: Response) => {
   try {
     const { id }: any = req.user;
     const user = await userRepository.findOneBy({ id });
     if (!user) {
       return res.status(400).send({ message: "Not found" });
     }
-    user.profileImage = `${__dirname}/${user.profileImage}`;
-    console.log(user.profileImage);
+
+    user.profileImage = `${user.profileImage}`;
     res.status(200).send({
       user: user,
     });

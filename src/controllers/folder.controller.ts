@@ -68,7 +68,7 @@ export const deleteFolder = async (req: Request, res: Response) => {
     });
   }
 };
-
+ 
 export const updateFolder = async (req: Request, res: Response) => {
   try {
     const response = await updateFolderService(req, res);
