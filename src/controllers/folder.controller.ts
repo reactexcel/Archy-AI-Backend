@@ -24,7 +24,6 @@ export const getFolder = async (req: Request, res: Response) => {
     if (!folder) {
       return res.status(400).send({ message: "Not found" });
     }
-
     res.status(200).send({
       folder,
     });
@@ -46,7 +45,7 @@ export const deleteFolder = async (req: Request, res: Response) => {
     res.status(500).send("Server Error");
   }
 };
-
+ 
 export const updateFolder = async (req: Request, res: Response) => {
   try {
     await updateFolderService(req, res);
