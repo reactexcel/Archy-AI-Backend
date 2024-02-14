@@ -25,6 +25,12 @@ class Project {
   @Column()
   userId!: string;
 
+  @Column({default:false})
+  isFavourite!: boolean;
+
+  @Column({default:false})
+  isShared!: boolean;
+
   @CreateDateColumn()
   createdAt!: Date;
 

@@ -25,8 +25,10 @@ export const registerCtrl = async (req: Request, res: Response) => {
     if (user) {
       return res.status(201).send({ message: ` Registered successfully ..` });
     }
-  } catch (error) {
-    res.status(500).send("Server Error");
+  }  catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
@@ -34,9 +36,10 @@ export const registerCtrl = async (req: Request, res: Response) => {
 export const loginGoogleCtrl = async (req: Request, res: Response) => {
   try {
     await loginGoogleService(req, res);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Server Error");
+  }  catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
@@ -48,9 +51,10 @@ export const loginCtrl = async (req: Request, res: Response) => {
     res
       .status(200)
       .json({ message: "Successfully Logged In", token: access_token });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Server Error");
+  }  catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
@@ -67,9 +71,10 @@ export const  getAllCtrl = async (req: Request, res: Response) => {
     res.status(200).send({
       user: user,
     });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Server Error");
+  }  catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
@@ -77,9 +82,10 @@ export const  getAllCtrl = async (req: Request, res: Response) => {
 export const updateProfile = async (req: Request, res: Response) => {
   try {
     const user = await updateProfileService(req, res);
-  } catch (error) {
-    console.error("Error updating user profile:", error);
-    res.status(500).json({ message: "Internal server error" });
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 //Send Otp
@@ -106,9 +112,10 @@ export const sendOTP = async (req: Request, res: Response) => {
     const token = generateToken({ email, newOtp });
 
     res.json({ message: "OTP sent successfully", token });
-  } catch (error) {
-    console.error("Error saving OTP:", error);
-    res.status(500).json({ message: "Failed to send OTP" });
+  }  catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
@@ -126,14 +133,10 @@ export const verifyOTP = (req: Request, res: Response) => {
     } else {
       res.status(400).json({ message: "Invalid OTP" });
     }
-  } catch (error) {
-    if (error instanceof Error) {
-      res
-        .status(500)
-        .json({ message: "Failed to verify OTP", error: error.message });
-    } else {
-      res.status(500).json({ message: "An unexpected error occurred" });
-    }
+  }  catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
