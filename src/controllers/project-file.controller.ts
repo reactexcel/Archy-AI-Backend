@@ -1,59 +1,95 @@
-import AppDataSource from "../config/database.config";
-import { Project } from "../entity/project.model";
 import { Request, Response } from "express";
 import {
   createProjectFileService,
   deleteProjectFileService,
+  getAllProjectFileService,
+  getProjectFileService,
   updateProjectFileService,
 } from "../services/project-file.services";
-import { ProjectFile } from "../entity/project-file.model";
-
-const projectFileRepository = AppDataSource.getRepository(ProjectFile);
+import { reqInterface } from "../interfaces/req.interface";
 
 export const createProjectFile = async (req: Request, res: Response) => {
   try {
-    await createProjectFileService(req, res);
-  } catch (error) {
-    res.status(500).send("Server Error");
+    const { name, projectId, isShared, isFavourite } = req.body;
+    const response = await createProjectFileService(
+      name,
+      projectId,
+      isShared,
+      isFavourite
+    );
+    res.status(201).json({
+      message: "Project File created Successfully",
+      data: response,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
 export const getProjectFile = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    console.log(id)
-    const project = await projectFileRepository.findOneBy({ id:id });
-    if (!project) {
-      return res.status(400).send({ message: "Not found" });
-    }
-
-    res.status(200).send({
-      project,
+    const response = await getProjectFileService(id);
+    res.status(200).json({
+      message: "Project File fetched Successfully",
+      data: response,
     });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Server Error");
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+export const getAllProjectFile = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.user as reqInterface;
+    const response = await getAllProjectFileService(id);
+    res.status(200).json({
+      message: "Project File fetched Successfully",
+      data: response,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
 export const deleteProjectFile = async (req: Request, res: Response) => {
   try {
-    const folder = await deleteProjectFileService(req, res);
-    if (folder) {
-      return res
-        .status(201)
-        .send({ message: ` Folder Deleted successfully ..`, folder });
-    }
-  } catch (error) {
-    res.status(500).send("Server Error");
+    const { id } = req.params;
+    const response = await deleteProjectFileService(id);
+    res.status(200).json({
+      message: "Project File deleted Successfully",
+      data: response,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
 export const updateProjectFile = async (req: Request, res: Response) => {
   try {
-    await updateProjectFileService(req, res);
-  } catch (error) {
-    console.error("Error updating user profile:", error);
-    res.status(500).json({ message: "Internal server error" });
+    const { id } = req.params;
+    const { name, isFavourite, isShared } = req.body;
+    const response = await updateProjectFileService(
+      id,
+      name,
+      isShared,
+      isFavourite
+    );
+    res.status(200).json({
+      message: "Project File updated Successfully",
+      data: response,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };

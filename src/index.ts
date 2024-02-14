@@ -25,9 +25,9 @@ app.use('/objects',express.static(__dirname +'/uploads'));
 // });
 app.use("/api/auth", userRoutes);
 app.use("/api/user/folder", folderRoutes);
-app.use("/api/user/folder", folderFileRoutes);
+app.use("/api/user/folder/folder-file", folderFileRoutes);
 app.use("/api/user/project", projectRoutes);
-app.use("/api/user/project", projectFileRoutes);
+app.use("/api/user/project/project-file", projectFileRoutes);
 
 export function connection() {
   try {

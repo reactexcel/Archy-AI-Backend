@@ -1,75 +1,118 @@
 import AppDataSource from "../config/database.config";
-import { Request, Response } from "express";
 import { Project } from "../entity/project.model";
-import { DeepPartial, Repository } from "typeorm";
-import { reqInterface } from "../interfaces/req.interface";
 import fs from "fs";
 
 const projectRepository = AppDataSource.getRepository(Project);
 
-export const createProjectService = async (req: Request, res: Response) => {
-  const { title } = req.body;
-  const { id } = req.user as reqInterface;
-
+export const createProjectService = async (
+  title: string,
+  id: string,
+  image: string,
+  isShared: boolean,
+  isFavourite: boolean
+) => {
   try {
     const existingProjectName = await projectRepository.findOneBy({
       title,
     });
+
     if (existingProjectName) {
-      return res.status(409).send({ message: "Existing Project Name " });
+      throw new Error("Project with same name already exists");
     }
+
     const Project = projectRepository.create({
       title,
       userId: id,
-      image: req.file?.filename,
+      image,
+      isShared,
+      isFavourite,
     });
-
     const savedProject = await projectRepository.save(Project);
-
-    if (!savedProject) {
-      return res.status(404).json({ message: "error in saving Project" });
+    return savedProject;
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
     }
-    return res
-      .status(201)
-      .send({ message: ` project Created successfully ..`, savedProject });
-  } catch (error) {
-    console.error(error);
+    throw new Error("Internal Server error");
   }
 };
 
-export const deleteProjectService = async (req: Request, res: Response) => {
-  const { id } = req.body;
+export const getProjectService = async (id: string) => {
   try {
     const project = await projectRepository.findOneBy({
       id,
     });
     if (!project) {
-      res.status(404).send({ message: "Project Not Found" });
+      throw new Error("Project Not Found");
     }
-
-    await projectRepository.delete({ id });
-
     return project;
   } catch (error) {
     console.error(error);
   }
 };
 
-export const updateProjectService = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { title } = req.body;
-  // Check if the user exists
-  let project = await projectRepository.findOneBy({ id });
-  if (!project) {
-    return res.status(404).json({ message: "Project not found" });
+export const getAllProjectService = async (id: string) => {
+  try {
+    const project = await projectRepository.findBy({
+      userId:id,
+    });
+    if (!project) {
+      throw new Error("Project Not Found");
+    }
+    return project;
+  } catch (error) {
+    console.error(error);
   }
+};
 
-  if (req.file) {
-    if (fs.existsSync(project.image)) fs.unlinkSync(project.image);
-    project.image = req.file.filename;
+export const deleteProjectService = async (id: string) => {
+  try {
+    const project = await projectRepository.findOneBy({
+      id,
+    });
+    if (!project) {
+      throw new Error("Project not found");
+    }
+
+    await projectRepository.delete({ id });
+
+    return project;
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
   }
-  // Update the user profile
-  project.title = title;
-  await projectRepository.save(project);
-  return res.status(200).json({ message: "User profile updated successfully" });
+};
+
+export const updateProjectService = async (
+  id: string,
+  title: string,
+  fileName: string,
+  isFavourite: boolean,
+  isShared: boolean
+) => {
+  try {
+    let project = await projectRepository.findOneBy({ id });
+    if (!project) {
+      throw new Error("Project not found");
+    }
+
+    if (fileName) {
+      if (fs.existsSync(project.image)) fs.unlinkSync(project.image);
+      project.image = fileName;
+    }
+    project.title = title || project.title;
+    project.isShared = isShared || project.isShared;
+    project.isFavourite = isFavourite || project.isFavourite;
+    return await projectRepository.save(project);
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
+  }
 };

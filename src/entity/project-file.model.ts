@@ -16,6 +16,12 @@ export class ProjectFile {
   @Column()
   name!: string;
 
+  @Column({default:false})
+  isFavourite!: boolean;
+
+  @Column({default:false})
+  isShared!: boolean;
+
   @Column()
   projectId!: string;
 

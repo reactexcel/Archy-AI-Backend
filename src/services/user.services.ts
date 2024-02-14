@@ -15,7 +15,7 @@ export const registerService = async (req: Request, res: Response) => {
       email,
     });
     if (existingUserEmail) {
-      res.status(409).send({ message: "Email already register" });
+      throw new Error("Folder with same name already exists");
     }
     const hashPassword = await bcrypt.hash(password, 10);
     const user = curr_User.create({
@@ -28,13 +28,12 @@ export const registerService = async (req: Request, res: Response) => {
     });
 
     const saveUser = await curr_User.save(user);
-
-    if (!saveUser) {
-      res.status(404).json({ message: "error in saving user" });
-    }
     return saveUser;
-  } catch (error) {
-    console.error(error);
+  }  catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error) throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
   }
 };
 
@@ -62,26 +61,36 @@ export const registerGoogleService = async (req: Request, res: Response) => {
       res.status(404).json({ message: "error in saving user" });
     }
     return saveUser;
-  } catch (error) {
-    console.error(error);
+  }  catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error) throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
   }
 };
 //Login with google service
 export const loginGoogleService = async (req: Request, res: Response) => {
   const { email } = req.body;
-  const user = await curr_User.findOneBy({
-    email,
-  });
-  if (!user) {
-    const newUser = await registerGoogleService(req, res);
-    return res
-      .status(200)
-      .json({ message: "Successfully registered ", newUser });
-  } else {
-    const access_token = generateToken({ id: user.id, email: user.email });
-    return res
-      .status(200)
-      .json({ message: "Successfully Logged In", token: access_token });
+  try {
+    const user = await curr_User.findOneBy({
+      email,
+    });
+    if (!user) {
+      const newUser = await registerGoogleService(req, res);
+      return res
+        .status(200)
+        .json({ message: "Successfully registered ", newUser });
+    } else {
+      const access_token = generateToken({ id: user.id, email: user.email });
+      return res
+        .status(200)
+        .json({ message: "Successfully Logged In", token: access_token });
+    }
+  }  catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error) throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
   }
 };
 
@@ -107,31 +116,34 @@ export const loginService = async (
   }
 };
 
-//Update Profile Service
 export const updateProfileService = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { username, password, newPassword, locations } = req.body;
-  // Check if the user exists
-  let user = await curr_User.findOneBy({ id });
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
+  try {
+    let user = await curr_User.findOneBy({ id });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const result = await bcrypt.compare(password, user.password);
+    if (!result) {
+      return res.status(404).json({ message: "Wrong password" });
+    }
+    if (req.file) {
+      if (fs.existsSync(user.profileImage)) fs.unlinkSync(user.profileImage);
+      user.profileImage = req.file.filename;
+    }
+    const hashPassword = await bcrypt.hash(newPassword, 10);
+    user.username = username || user.username;
+    user.password = hashPassword || user.password;
+    user.locations = locations || user.locations;
+    await curr_User.save(user);
+    return res
+      .status(200)
+      .json({ message: "User profile updated successfully" });
+  }  catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error) throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
   }
-
-  //Check Old Password
-  const result = await bcrypt.compare(password, user.password);
-  if (!result) {
-    return res.status(404).json({ message: "Wrong password" });
-  }
-
-  if (req.file) {
-    if (fs.existsSync(user.profileImage)) fs.unlinkSync(user.profileImage);
-    user.profileImage = req.file.filename;
-  }
-  const hashPassword = await bcrypt.hash(newPassword, 10);
-  // Update the user profile
-  user.username = username || user.username;
-  user.password = hashPassword || user.password;
-  user.locations = locations || user.locations;
-  await curr_User.save(user);
-  return res.status(200).json({ message: "User profile updated successfully" });
 };
