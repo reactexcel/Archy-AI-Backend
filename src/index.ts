@@ -1,10 +1,15 @@
 import express, { Request } from "express";
 import "reflect-metadata";
 import userRoutes from "./routes/user.routes";
+import folderRoutes from "./routes/folder.routes";
+import folderFileRoutes from "./routes/folder-file.routes";
+import projectRoutes from "./routes/project.routes";
+import projectFileRoutes from "./routes/project-file.routes";
 import cors from "cors";
 import AppDataSource from "./config/database.config";
 import dotenv from "dotenv";
 import admin from 'firebase-admin';
+import path from 'path'
 
 
 dotenv.config();
@@ -19,6 +24,10 @@ app.use('/objects',express.static(__dirname +'/uploads'));
 //   databaseURL: 'https://your-firebase-project.firebaseio.com'
 // });
 app.use("/api/auth", userRoutes);
+app.use("/api/user/folder", folderRoutes);
+app.use("/api/user/folder", folderFileRoutes);
+app.use("/api/user/project", projectRoutes);
+app.use("/api/user/project", projectFileRoutes);
 
 export function connection() {
   try {
@@ -29,7 +38,7 @@ export function connection() {
           console.log(`server is running on PORT ${PORT}`);
         });
       })
-      .catch((error: any) => console.log(error));
+      .catch((error) => console.log(error));
   } catch (error) {
     console.error(error);
   }

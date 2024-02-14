@@ -62,6 +62,8 @@ export const getAllCtrl = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(400).send({ message: "Not found" });
     }
+    user.profileImage = `${__dirname}/${user.profileImage}`;
+    console.log(user.profileImage);
     res.status(200).send({
       user: user,
     });
