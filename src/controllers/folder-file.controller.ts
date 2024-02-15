@@ -6,6 +6,7 @@ import {
   getFolderFileService,
   updateFolderFileService,
 } from "../services/folder-file.services";
+import { filterInterface } from "../interfaces/filter.interface";
 
 export const createFolderFile = async (req: Request, res: Response) => {
   try {
@@ -20,10 +21,12 @@ export const createFolderFile = async (req: Request, res: Response) => {
       message: "Folder File created Successfully",
       data: response,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: error.message,
-    });
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
   }
 };
 
@@ -35,10 +38,12 @@ export const getFolderFile = async (req: Request, res: Response) => {
       message: "Folder File fetched Successfully",
       data: response,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: error.message,
-    });
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
   }
 };
 
@@ -47,7 +52,7 @@ export const getAllFolderFile = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { isShared, isFavourite } = req.query;
 
-    let filters: any = { userId: id };
+    let filters = { userId: id } as filterInterface;
     if (isShared !== undefined) {
       filters.isShared = isShared === 'true';
     }
@@ -59,10 +64,12 @@ export const getAllFolderFile = async (req: Request, res: Response) => {
       message: "",
       data: response,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: error.message,
-    });
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
   }
 };
 
@@ -74,10 +81,12 @@ export const deleteFolderFile = async (req: Request, res: Response) => {
       message: "Folder File deleted Successfully",
       data: response,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: error.message,
-    });
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
   }
 };
 
@@ -95,9 +104,11 @@ export const updateFolderFile = async (req: Request, res: Response) => {
       message: "Folder File updated Successfully",
       data: response,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: error.message,
-    });
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
   }
 };

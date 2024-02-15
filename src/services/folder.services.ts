@@ -2,6 +2,7 @@ import { AnyError } from "typeorm";
 import AppDataSource from "../config/database.config";
 import { Folder } from "../entity/folder.model";
 import { Request, Response } from "express";
+import { filterInterface } from "../interfaces/filter.interface";
 
 const folderRepository = AppDataSource.getRepository(Folder);
 
@@ -54,61 +55,7 @@ export const getFolderService = async (id: string) => {
   }
 };
 
-// export const getAllFavouriteFolderService = async (id: string) => {
-//   try {
-//     const data = await folderRepository.find({
-//       where: { isFavourite: true, userId: id },
-//     });
-
-//     if (data.length === 0) {
-//       throw new Error("No data Found");
-//     }
-//     return data;
-//   } catch (error: unknown) {
-//     if (typeof error === "object" && error) {
-//       if ("message" in error)
-//         throw new Error(error?.message as unknown as string);
-//     }
-//     throw new Error("Internal Server error");
-//   }
-// };
-
-// export const getAllSharedFolderService = async (id: string) => {
-//   try {
-//     const data = await folderRepository.find({
-//       where: { isShared: false, userId: id },
-//     });
-
-//     if (data.length === 0) {
-//       throw new Error("No data Found");
-//     }
-//     return data;
-//   } catch (error: unknown) {
-//     if (typeof error === "object" && error) {
-//       if ("message" in error)
-//         throw new Error(error?.message as unknown as string);
-//     }
-//     throw new Error("Internal Server error");
-//   }
-// };
-
-// export const getAllFolderByUserIdService = async (id: string) => {
-//   try {
-//     const folder = await folderRepository.findBy({ userId: id });
-//     if (folder.length === 0) {
-//       throw new Error("No data Found");
-//     }
-//     return folder;
-//   } catch (error: unknown) {
-//     if (typeof error === "object" && error) {
-//       if ("message" in error)
-//         throw new Error(error?.message as unknown as string);
-//     }
-//     throw new Error("Internal Server error");
-//   }
-// };
-
-export const getAllFolderByUserIdService = async (filters:any) => {
+export const getAllFolderByUserIdService = async (filters:filterInterface) => {
   try {
     const folder = await folderRepository.findBy(filters);
     if (folder.length === 0) {

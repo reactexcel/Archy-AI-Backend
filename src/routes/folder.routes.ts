@@ -2,11 +2,12 @@ import express from "express";
 
 import { upload } from "../utils/uploadImage.util";
 import { verifyFirebaseToken, verifyUser } from "../middlewares/verifyUser";
-import { createFolder, deleteFolder, getAllFolderByUserId, getFolder, updateFolder } from "../controllers/folder.controller";
+import { createDuplicateFolder, createFolder, deleteFolder, getAllFolderByUserId, getFolder, updateFolder } from "../controllers/folder.controller";
 
 const router = express.Router();
 
 router.post("/create",verifyUser, createFolder);
+router.post("/duplicate/:id",verifyUser, createDuplicateFolder);
 router.delete("/:id",verifyUser, deleteFolder);
 router.put("/",verifyUser, deleteFolder);
 
