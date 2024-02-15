@@ -13,7 +13,8 @@ export const createFolderService = async (
 ) => {
   try {
     const existingFolderName = await folderRepository.findOneBy({
-      title,userId:id
+      title,
+      userId: id,
     });
     if (existingFolderName) {
       throw new Error("Folder with same name already exists");
@@ -38,7 +39,7 @@ export const createFolderService = async (
 export const getFolderService = async (id: string) => {
   try {
     const folder = await folderRepository.findOneBy({
-      id: id,userId:id
+      id: id,
     });
     if (!folder) {
       throw new Error("Folder Not Found");
@@ -53,43 +54,63 @@ export const getFolderService = async (id: string) => {
   }
 };
 
-export const getAllFavouriteFolderService = async (id: string) => {
+// export const getAllFavouriteFolderService = async (id: string) => {
+//   try {
+//     const data = await folderRepository.find({
+//       where: { isFavourite: true, userId: id },
+//     });
+
+//     if (data.length === 0) {
+//       throw new Error("No data Found");
+//     }
+//     return data;
+//   } catch (error: unknown) {
+//     if (typeof error === "object" && error) {
+//       if ("message" in error)
+//         throw new Error(error?.message as unknown as string);
+//     }
+//     throw new Error("Internal Server error");
+//   }
+// };
+
+// export const getAllSharedFolderService = async (id: string) => {
+//   try {
+//     const data = await folderRepository.find({
+//       where: { isShared: false, userId: id },
+//     });
+
+//     if (data.length === 0) {
+//       throw new Error("No data Found");
+//     }
+//     return data;
+//   } catch (error: unknown) {
+//     if (typeof error === "object" && error) {
+//       if ("message" in error)
+//         throw new Error(error?.message as unknown as string);
+//     }
+//     throw new Error("Internal Server error");
+//   }
+// };
+
+// export const getAllFolderByUserIdService = async (id: string) => {
+//   try {
+//     const folder = await folderRepository.findBy({ userId: id });
+//     if (folder.length === 0) {
+//       throw new Error("No data Found");
+//     }
+//     return folder;
+//   } catch (error: unknown) {
+//     if (typeof error === "object" && error) {
+//       if ("message" in error)
+//         throw new Error(error?.message as unknown as string);
+//     }
+//     throw new Error("Internal Server error");
+//   }
+// };
+
+export const getAllFolderByUserIdService = async (filters:any) => {
   try {
-    const data = await folderRepository.find({ where: { isFavourite: true,userId:id } });
-
-    if (data.length === 0) {
-      throw new Error("No data Found");
-    }
-    return data;
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
-  }
-};
-
-export const getAllSharedFolderService = async (id: string) => {
-  try {
-    const data = await folderRepository.find({ where: { isShared: false,userId:id } });
-
-    if (data.length === 0) {
-      throw new Error("No data Found");
-    }
-    return data;
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
-  }
-};
-
-export const getAllFolderByUserIdService = async (id: string) => {
-  try {
-    const folder = await folderRepository.findBy({ userId: id });
+    const folder = await folderRepository.findBy(filters);
     if (folder.length === 0) {
       throw new Error("No data Found");
     }
@@ -102,7 +123,6 @@ export const getAllFolderByUserIdService = async (id: string) => {
     throw new Error("Internal Server error");
   }
 };
-
 
 export const deleteFolderService = async (id: string) => {
   try {

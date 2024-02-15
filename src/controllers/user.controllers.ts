@@ -8,11 +8,13 @@ import { User } from "../entity/user.model";
 import { v4 as uuidv4 } from "uuid"; //For unique id
 import passport from "passport";
 import {
+  getUserService,
   loginGoogleService,
   loginService,
   registerService,
   updateProfileService,
 } from "../services/user.services";
+import { reqInterface } from "../interfaces/req.interface";
 
 const otpRepository = AppDataSource.getRepository(Otp);
 const userRepository = AppDataSource.getRepository(User);
@@ -60,7 +62,6 @@ export const loginCtrl = async (req: Request, res: Response) => {
       message: "Successfully Logged In",
       token: response,
     });
-    
   } catch (error: any) {
     res.status(500).json({
       error: error.message,
@@ -71,16 +72,11 @@ export const loginCtrl = async (req: Request, res: Response) => {
 //Get All User
 export const getAllCtrl = async (req: Request, res: Response) => {
   try {
-    const { id }: any = req.user;
-    const user = await userRepository.findOneBy({ id });
-    if (!user) {
-      return res.status(400).send({ message: "Not found" });
-    }
-
-    user.profileImage = `${user.profileImage}`;
-    user.password = "";
-    res.status(200).send({
-      user: user,
+    const { id } = req.user as reqInterface;
+    const response = await getUserService(id);
+    res.status(200).json({
+      message: "User",
+      user: response,
     });
   } catch (error: any) {
     res.status(500).json({

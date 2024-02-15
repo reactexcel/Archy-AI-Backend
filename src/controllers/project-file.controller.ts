@@ -2,9 +2,9 @@ import { Request, Response } from "express";
 import {
   createProjectFileService,
   deleteProjectFileService,
-  getAllFavouriteProjectFileService,
+  // getAllFavouriteProjectFileService,
   getAllProjectFileService,
-  getAllSharedProjectFileService,
+  // getAllSharedProjectFileService,
   getProjectFileService,
   updateProjectFileService,
 } from "../services/project-file.services";
@@ -45,42 +45,21 @@ export const getProjectFile = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllFavouriteProjectFile = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.user as reqInterface;
-    const response = await getAllFavouriteProjectFileService(id);
-    res.status(200).json({
-      message: "Project File fetched Successfully",
-      data: response,
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      error: error.message,
-    });
-  }
-};
-
-export const getAllSharedProjectFile = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.user as reqInterface;
-    const response = await getAllSharedProjectFileService(id);
-    res.status(200).json({
-      message: "Project File fetched Successfully",
-      data: response,
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      error: error.message,
-    });
-  }
-};
-
 export const getAllProjectFile = async (req: Request, res: Response) => {
   try {
-    const { id } = req.user as reqInterface;
-    const response = await getAllProjectFileService(id);
+    const { id } = req.params;
+    const { isShared, isFavourite } = req.query;
+
+    let filters: any = { userId: id };
+    if (isShared !== undefined) {
+      filters.isShared = isShared === 'true';
+    }
+    if (isFavourite !== undefined) {
+      filters.isFavourite = isFavourite === 'true';
+    }
+    const response = await getAllProjectFileService(filters);
     res.status(200).json({
-      message: "Project File fetched Successfully",
+      message: "",
       data: response,
     });
   } catch (error: any) {
@@ -89,6 +68,56 @@ export const getAllProjectFile = async (req: Request, res: Response) => {
     });
   }
 };
+
+
+
+// export const getAllFavouriteProjectFile = async (
+//   req: Request,
+//   res: Response
+// ) => {
+//   try {
+//     const { id } = req.user as reqInterface;
+//     const response = await getAllFavouriteProjectFileService(id);
+//     res.status(200).json({
+//       message: "Project File fetched Successfully",
+//       data: response,
+//     });
+//   } catch (error: any) {
+//     res.status(500).json({
+//       error: error.message,
+//     });
+//   }
+// };
+
+// export const getAllSharedProjectFile = async (req: Request, res: Response) => {
+//   try {
+//     const { id } = req.user as reqInterface;
+//     const response = await getAllSharedProjectFileService(id);
+//     res.status(200).json({
+//       message: "Project File fetched Successfully",
+//       data: response,
+//     });
+//   } catch (error: any) {
+//     res.status(500).json({
+//       error: error.message,
+//     });
+//   }
+// };
+
+// export const getAllProjectFile = async (req: Request, res: Response) => {
+//   try {
+//     const { id } = req.user as reqInterface;
+//     const response = await getAllProjectFileService(id);
+//     res.status(200).json({
+//       message: "Project File fetched Successfully",
+//       data: response,
+//     });
+//   } catch (error: any) {
+//     res.status(500).json({
+//       error: error.message,
+//     });
+//   }
+// };
 
 export const deleteProjectFile = async (req: Request, res: Response) => {
   try {
