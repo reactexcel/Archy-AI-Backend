@@ -29,7 +29,7 @@ export const registerCtrl = async (req: Request, res: Response) => {
       locations,
       fileName
     );
-    res.status(200).json({
+    res.status(201).json({
       message: "User",
       data: response,
     });

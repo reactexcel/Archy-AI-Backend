@@ -78,7 +78,7 @@ export const getProjectFileService = async (id: string) => {
 export const getAllFavouriteProjectFileService = async (id: string) => {
   try {
     const data = await projectFileRepository.find({
-      where: { isFavourite: true },
+      where: { isFavourite: true,projectId:id },
     });
 
     if (data.length === 0) {
@@ -97,7 +97,7 @@ export const getAllFavouriteProjectFileService = async (id: string) => {
 export const getAllSharedProjectFileService = async (id: string) => {
   try {
     const data = await projectFileRepository.find({
-      where: { isShared: false },
+      where: { isShared: false,projectId:id },
     });
 
     if (data.length === 0) {
