@@ -54,7 +54,7 @@ export const getProjectService = async (id: string) => {
 
 export const getAllFavouriteProjectService = async (id: string) => {
   try {
-    const data = await projectRepository.find({ where: { isFavourite: true } });
+    const data = await projectRepository.find({ where: { isFavourite: true,userId:id } });
 
     if (data.length === 0) {
       throw new Error("No data Found");
@@ -71,7 +71,7 @@ export const getAllFavouriteProjectService = async (id: string) => {
 
 export const getAllSharedProjectService = async (id: string) => {
   try {
-    const data = await projectRepository.find({ where: { isShared: true } });
+    const data = await projectRepository.find({ where: { isShared: true,userId:id } });
 
     if (data.length === 0) {
       throw new Error("No data Found");

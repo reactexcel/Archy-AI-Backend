@@ -55,7 +55,7 @@ export const getFolderService = async (id: string) => {
 
 export const getAllFavouriteFolderService = async (id: string) => {
   try {
-    const data = await folderRepository.find({ where: { isFavourite: true } });
+    const data = await folderRepository.find({ where: { isFavourite: true,userId:id } });
 
     if (data.length === 0) {
       throw new Error("No data Found");
@@ -72,7 +72,7 @@ export const getAllFavouriteFolderService = async (id: string) => {
 
 export const getAllSharedFolderService = async (id: string) => {
   try {
-    const data = await folderRepository.find({ where: { isShared: false } });
+    const data = await folderRepository.find({ where: { isShared: false,userId:id } });
 
     if (data.length === 0) {
       throw new Error("No data Found");

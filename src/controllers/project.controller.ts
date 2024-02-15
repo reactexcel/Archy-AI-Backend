@@ -18,7 +18,7 @@ export const createProject = async (req: Request, res: Response) => {
     const image = req.file?.filename || "";
 
     let response = await createProjectService(title, id, image,isShared,isFavourite);
-    res.status(200).json({
+    res.status(201).json({
       message: "Saved Project successfully",
       data: response,
     });
