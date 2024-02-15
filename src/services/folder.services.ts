@@ -53,6 +53,40 @@ export const getFolderService = async (id: string) => {
   }
 };
 
+export const getAllFavouriteFolderService = async (id: string) => {
+  try {
+    const data = await folderRepository.find({ where: { isFavourite: true } });
+
+    if (data.length === 0) {
+      throw new Error("No data Found");
+    }
+    return data;
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
+  }
+};
+
+export const getAllSharedFolderService = async (id: string) => {
+  try {
+    const data = await folderRepository.find({ where: { isShared: false } });
+
+    if (data.length === 0) {
+      throw new Error("No data Found");
+    }
+    return data;
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
+  }
+};
+
 export const getAllFolderByUserIdService = async (id: string) => {
   try {
     const folder = await folderRepository.findBy({ userId: id });
@@ -69,21 +103,21 @@ export const getAllFolderByUserIdService = async (id: string) => {
   }
 };
 
-export const getAllFolderIsSharedService = async (id: string) => {
-  try {
-    const folder = await folderRepository.findBy({ userId: id });
-    if (folder.length == 0) {
-      throw new Error("No data Found");
-    }
-    return folder;
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
-  }
-};
+// export const getAllFolderIsSharedService = async (id: string) => {
+//   try {
+//     const folder = await folderRepository.findBy({ userId: id });
+//     if (folder.length == 0) {
+//       throw new Error("No data Found");
+//     }
+//     return folder;
+//   } catch (error: unknown) {
+//     if (typeof error === "object" && error) {
+//       if ("message" in error)
+//         throw new Error(error?.message as unknown as string);
+//     }
+//     throw new Error("Internal Server error");
+//   }
+// };
 
 export const deleteFolderService = async (id: string) => {
   try {

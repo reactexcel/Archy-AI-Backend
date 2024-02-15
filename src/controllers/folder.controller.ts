@@ -2,7 +2,9 @@ import { Request, Response } from "express";
 import {
   createFolderService,
   deleteFolderService,
+  getAllFavouriteFolderService,
   getAllFolderByUserIdService,
+  getAllSharedFolderService,
   getFolderService,
   updateFolderService,
 } from "../services/folder.services";
@@ -43,6 +45,36 @@ export const getAllFolderByUserId = async (req: Request, res: Response) => {
   try {
     const {id} = req.params;
     const response = await getAllFolderByUserIdService(id);
+    res.status(200).json({
+      message: "",
+      data: response,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+export const getAllFavouriteFolder = async (req: Request, res: Response) => {
+  try {
+    const {id} = req.params;
+    const response = await getAllFavouriteFolderService(id);
+    res.status(200).json({
+      message: "",
+      data: response,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+export const getAllSharedFolder = async (req: Request, res: Response) => {
+  try {
+    const {id} = req.params;
+    const response = await getAllSharedFolderService(id);
     res.status(200).json({
       message: "",
       data: response,

@@ -105,11 +105,12 @@ export const loginService = async (
   });
 
   if (!user) {
-    return res.status(404).json({ message: "Not found" });
+    throw new Error('User Not found')
+    
   }
-  const result = bcrypt.compare(password, user.password);
+  const result =await bcrypt.compare(password, user.password);
   if (!result) {
-    return res.status(404).json({ message: "Wrong password" });
+    throw new Error('Wrong Password')
   } else {
     const access_token = generateToken({ id: user.id, email: user.email });
     return access_token;
