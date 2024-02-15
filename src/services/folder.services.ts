@@ -13,7 +13,7 @@ export const createFolderService = async (
 ) => {
   try {
     const existingFolderName = await folderRepository.findOneBy({
-      title,
+      title,userId:id
     });
     if (existingFolderName) {
       throw new Error("Folder with same name already exists");
@@ -38,7 +38,7 @@ export const createFolderService = async (
 export const getFolderService = async (id: string) => {
   try {
     const folder = await folderRepository.findOneBy({
-      id: id,
+      id: id,userId:id
     });
     if (!folder) {
       throw new Error("Folder Not Found");
@@ -103,21 +103,6 @@ export const getAllFolderByUserIdService = async (id: string) => {
   }
 };
 
-// export const getAllFolderIsSharedService = async (id: string) => {
-//   try {
-//     const folder = await folderRepository.findBy({ userId: id });
-//     if (folder.length == 0) {
-//       throw new Error("No data Found");
-//     }
-//     return folder;
-//   } catch (error: unknown) {
-//     if (typeof error === "object" && error) {
-//       if ("message" in error)
-//         throw new Error(error?.message as unknown as string);
-//     }
-//     throw new Error("Internal Server error");
-//   }
-// };
 
 export const deleteFolderService = async (id: string) => {
   try {

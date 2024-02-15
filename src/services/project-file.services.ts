@@ -12,7 +12,7 @@ export const createProjectFileService = async (
 ) => {
   try {
     const existingProjectName = await projectFileRepository.findOneBy({
-      name,
+      name, projectId
     });
     if (existingProjectName) {
       throw new Error("Project File with same name already exists");

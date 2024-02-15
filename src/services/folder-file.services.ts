@@ -11,7 +11,7 @@ export const createFolderFileService = async (
 ) => {
   try {
     const existingFolderFileName = await folderFileRepository.findOneBy({
-      name,
+      name, folderId
     });
     if (existingFolderFileName) {
       throw new Error("Folder File already exists");

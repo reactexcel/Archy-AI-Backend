@@ -13,7 +13,7 @@ export const createProjectService = async (
 ) => {
   try {
     const existingProjectName = await projectRepository.findOneBy({
-      title,
+      title,userId:id
     });
 
     if (existingProjectName) {
