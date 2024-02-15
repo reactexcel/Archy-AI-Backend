@@ -75,6 +75,44 @@ export const getProjectFileService = async (id: string) => {
   }
 };
 
+export const getAllFavouriteProjectFileService = async (id: string) => {
+  try {
+    const data = await projectFileRepository.find({
+      where: { isFavourite: true },
+    });
+
+    if (data.length === 0) {
+      throw new Error("No data Found");
+    }
+    return data;
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
+  }
+};
+
+export const getAllSharedProjectFileService = async (id: string) => {
+  try {
+    const data = await projectFileRepository.find({
+      where: { isShared: false },
+    });
+
+    if (data.length === 0) {
+      throw new Error("No data Found");
+    }
+    return data;
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
+  }
+};
+
 export const getAllProjectFileService = async (id: string) => {
   try {
     const folder = await projectFileRepository.findBy({
