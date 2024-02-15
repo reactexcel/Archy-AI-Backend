@@ -17,9 +17,7 @@ import {
 import { reqInterface } from "../interfaces/req.interface";
 
 const otpRepository = AppDataSource.getRepository(Otp);
-const userRepository = AppDataSource.getRepository(User);
 
-//SignUp User
 export const registerCtrl = async (req: Request, res: Response) => {
   try {
     const { username, email, password, locations } = req.body;
@@ -35,25 +33,27 @@ export const registerCtrl = async (req: Request, res: Response) => {
       message: "User",
       data: response,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: error.message,
-    });
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
   }
 };
 
-//Login with Google
 export const loginGoogleCtrl = async (req: Request, res: Response) => {
   try {
     await loginGoogleService(req, res);
-  } catch (error: any) {
-    res.status(500).json({
-      error: error.message,
-    });
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
   }
 };
 
-//Login User
 export const loginCtrl = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
@@ -62,14 +62,15 @@ export const loginCtrl = async (req: Request, res: Response) => {
       message: "Successfully Logged In",
       token: response,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: error.message,
-    });
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
   }
 };
 
-//Get All User
 export const getAllCtrl = async (req: Request, res: Response) => {
   try {
     const { id } = req.user as reqInterface;
@@ -78,10 +79,12 @@ export const getAllCtrl = async (req: Request, res: Response) => {
       message: "User",
       user: response,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: error.message,
-    });
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
   }
 };
 
@@ -89,10 +92,12 @@ export const getAllCtrl = async (req: Request, res: Response) => {
 export const updateProfile = async (req: Request, res: Response) => {
   try {
     const user = await updateProfileService(req, res);
-  } catch (error: any) {
-    res.status(500).json({
-      error: error.message,
-    });
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
   }
 };
 //Send Otp
@@ -119,10 +124,12 @@ export const sendOTP = async (req: Request, res: Response) => {
     const token = generateToken({ email, newOtp });
 
     res.json({ message: "OTP sent successfully", token });
-  } catch (error: any) {
-    res.status(500).json({
-      error: error.message,
-    });
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
   }
 };
 
@@ -140,10 +147,12 @@ export const verifyOTP = (req: Request, res: Response) => {
     } else {
       res.status(400).json({ message: "Invalid OTP" });
     }
-  } catch (error: any) {
-    res.status(500).json({
-      error: error.message,
-    });
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
   }
 };
 

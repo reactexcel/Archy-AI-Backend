@@ -1,6 +1,7 @@
 import AppDataSource from "../config/database.config";
 import { Request, Response } from "express";
 import { ProjectFile } from "../entity/project-file.model";
+import { filterInterface } from "../interfaces/filter.interface";
 
 const projectFileRepository = AppDataSource.getRepository(ProjectFile);
 
@@ -58,7 +59,7 @@ export const deleteProjectFileService = async (id: string) => {
   }
 };
 
-export const getAllProjectFileService = async (filters:any) => {
+export const getAllProjectFileService = async (filters:filterInterface) => {
   try {
     const folder = await projectFileRepository.findBy(filters);
     if (folder.length === 0) {
@@ -92,63 +93,7 @@ export const getProjectFileService = async (id: string) => {
   }
 };
 
-// export const getAllFavouriteProjectFileService = async (id: string) => {
-//   try {
-//     const data = await projectFileRepository.find({
-//       where: { isFavourite: true, projectId: id },
-//     });
-
-//     if (data.length === 0) {
-//       throw new Error("No data Found");
-//     }
-//     return data;
-//   } catch (error: unknown) {
-//     if (typeof error === "object" && error) {
-//       if ("message" in error)
-//         throw new Error(error?.message as unknown as string);
-//     }
-//     throw new Error("Internal Server error");
-//   }
-// };
-
-// export const getAllSharedProjectFileService = async (id: string) => {
-//   try {
-//     const data = await projectFileRepository.find({
-//       where: { isShared: false, projectId: id },
-//     });
-
-//     if (data.length === 0) {
-//       throw new Error("No data Found");
-//     }
-//     return data;
-//   } catch (error: unknown) {
-//     if (typeof error === "object" && error) {
-//       if ("message" in error)
-//         throw new Error(error?.message as unknown as string);
-//     }
-//     throw new Error("Internal Server error");
-//   }
-// };
-
-// export const getAllProjectFileService = async (id: string) => {
-//   try {
-//     const folder = await projectFileRepository.findBy({
-//       projectId: id,
-//     });
-//     if (!folder) {
-//       throw new Error("Project File Not Found");
-//     }
-//     return folder;
-//   } catch (error: unknown) {
-//     if (typeof error === "object" && error) {
-//       if ("message" in error)
-//         throw new Error(error?.message as unknown as string);
-//     }
-//     throw new Error("Internal Server error");
-//   }
-// };
-
-export const getAllFolderByUserIdService = async (filters:any) => {
+export const getAllFolderByUserIdService = async (filters:filterInterface) => {
   try {
     const folder = await projectFileRepository.findBy(filters);
     if (folder.length === 0) {

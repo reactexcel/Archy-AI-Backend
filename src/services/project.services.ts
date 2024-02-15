@@ -1,6 +1,7 @@
 import AppDataSource from "../config/database.config";
 import { Project } from "../entity/project.model";
 import fs from "fs";
+import { filterInterface } from "../interfaces/filter.interface";
 
 const projectRepository = AppDataSource.getRepository(Project);
 
@@ -52,7 +53,7 @@ export const getProjectService = async (id: string) => {
   }
 };
 
-export const getAllProjectService = async (filters:any) => {
+export const getAllProjectService = async (filters:filterInterface) => {
   try {
     const folder = await projectRepository.findBy(filters);
     if (folder.length === 0) {

@@ -8,6 +8,7 @@ import {
   updateProjectService,
 } from "../services/project.services";
 import { reqInterface } from "../interfaces/req.interface";
+import { filterInterface } from "../interfaces/filter.interface";
 
 export const createProject = async (req: Request, res: Response) => {
   try {
@@ -26,10 +27,12 @@ export const createProject = async (req: Request, res: Response) => {
       message: "Saved Project successfully",
       data: response,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: error.message,
-    });
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
   }
 };
 
@@ -85,7 +88,7 @@ export const getAllProjectByUserId = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { isShared, isFavourite } = req.query;
 
-    let filters: any = { userId: id };
+    let filters = { userId: id } as filterInterface;
     if (isShared !== undefined) {
       filters.isShared = isShared === 'true';
     }
@@ -97,10 +100,12 @@ export const getAllProjectByUserId = async (req: Request, res: Response) => {
       message: "",
       data: response,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: error.message,
-    });
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
   }
 };
 
@@ -112,10 +117,12 @@ export const getProject = async (req: Request, res: Response) => {
       message: "Project",
       data: response,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: error.message,
-    });
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
   }
 };
 
@@ -127,10 +134,12 @@ export const deleteProject = async (req: Request, res: Response) => {
       message: "Deleted Project successfully",
       data: response,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: error.message,
-    });
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
   }
 };
 
@@ -150,9 +159,11 @@ export const updateProject = async (req: Request, res: Response) => {
       message: "Updated Project successfully",
       data: project,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: error.message,
-    });
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
   }
 };

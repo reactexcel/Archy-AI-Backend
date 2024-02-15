@@ -1,5 +1,6 @@
 import AppDataSource from "../config/database.config";
 import { FolderFile } from "../entity/folder-file.model";
+import { filterInterface } from "../interfaces/filter.interface";
 
 const folderFileRepository = AppDataSource.getRepository(FolderFile);
 
@@ -71,7 +72,7 @@ export const getFolderFileService = async (id: string) => {
   }
 };
 
-export const getAllFolderFileService = async (filters:any) => {
+export const getAllFolderFileService = async (filters:filterInterface) => {
   try {
     const folder = await folderFileRepository.findBy(filters);
     if (folder.length === 0) {
