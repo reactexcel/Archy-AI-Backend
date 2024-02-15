@@ -24,7 +24,7 @@ export const registerService = async (
     }
     const hashPassword = await bcrypt.hash(password, 10);
     const user = curr_User.create({
-      id:uuidv4(),
+      id: uuidv4(),
       username,
       email,
       password: hashPassword,
@@ -118,6 +118,17 @@ export const loginService = async (email: string, password: string) => {
     const access_token = generateToken({ id: user.id, email: user.email });
     return access_token;
   }
+};
+
+export const getUserService = async (id: string) => {
+  const user = await curr_User.findOneBy({ id });
+  if (!user) {
+    throw new Error("User not Found");
+  }
+
+  user.profileImage = `${user.profileImage}`;
+  user.password = "";
+  return user;
 };
 
 export const updateProfileService = async (req: Request, res: Response) => {

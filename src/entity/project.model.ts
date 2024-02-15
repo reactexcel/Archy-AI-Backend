@@ -19,11 +19,23 @@ class Project {
   @Column()
   title!: string;
 
-  @Column()
+  @Column({default:""})
   image!: string;
 
   @Column()
   userId!: string;
+
+  @Column({default:0})
+  loveEmoji!: number;
+
+  @Column({default:0})
+  fireEmoji!: number;
+
+  @Column({default:0})
+  smileEmoji!: number;
+
+  @Column({default:0})
+  angerEmoji!: number;
 
   @Column({default:false})
   isFavourite!: boolean;

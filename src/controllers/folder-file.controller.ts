@@ -2,9 +2,7 @@ import { Request, Response } from "express";
 import {
   createFolderFileService,
   deleteFolderFileService,
-  getAllFavouriteFolderFileService,
   getAllFolderFileService,
-  getAllSharedFolderFileService,
   getFolderFileService,
   updateFolderFileService,
 } from "../services/folder-file.services";
@@ -46,40 +44,19 @@ export const getFolderFile = async (req: Request, res: Response) => {
 
 export const getAllFolderFile = async (req: Request, res: Response) => {
   try {
-    const { id } = req.body;
-    const response = await getAllFolderFileService(id);
-    res.status(200).json({
-      message: "Folder File fetched Successfully",
-      data: response,
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      error: error.message,
-    });
-  }
-};
+    const { id } = req.params;
+    const { isShared, isFavourite } = req.query;
 
-export const getAllFavouriteFolderFile = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.body;
-    const response = await getAllFavouriteFolderFileService(id);
+    let filters: any = { userId: id };
+    if (isShared !== undefined) {
+      filters.isShared = isShared === 'true';
+    }
+    if (isFavourite !== undefined) {
+      filters.isFavourite = isFavourite === 'true';
+    }
+    const response = await getAllFolderFileService(filters);
     res.status(200).json({
-      message: "Folder File fetched Successfully",
-      data: response,
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      error: error.message,
-    });
-  }
-};
-
-export const getAllSharedFolderFile = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.body;
-    const response = await getAllSharedFolderFileService(id);
-    res.status(200).json({
-      message: "Folder File fetched Successfully",
+      message: "",
       data: response,
     });
   } catch (error: any) {

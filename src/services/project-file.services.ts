@@ -12,7 +12,8 @@ export const createProjectFileService = async (
 ) => {
   try {
     const existingProjectName = await projectFileRepository.findOneBy({
-      name, projectId
+      name,
+      projectId,
     });
     if (existingProjectName) {
       throw new Error("Project File with same name already exists");
@@ -57,6 +58,22 @@ export const deleteProjectFileService = async (id: string) => {
   }
 };
 
+export const getAllProjectFileService = async (filters:any) => {
+  try {
+    const folder = await projectFileRepository.findBy(filters);
+    if (folder.length === 0) {
+      throw new Error("No data Found");
+    }
+    return folder;
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
+  }
+};
+
 export const getProjectFileService = async (id: string) => {
   try {
     const folder = await projectFileRepository.findOneBy({
@@ -75,51 +92,67 @@ export const getProjectFileService = async (id: string) => {
   }
 };
 
-export const getAllFavouriteProjectFileService = async (id: string) => {
-  try {
-    const data = await projectFileRepository.find({
-      where: { isFavourite: true,projectId:id },
-    });
+// export const getAllFavouriteProjectFileService = async (id: string) => {
+//   try {
+//     const data = await projectFileRepository.find({
+//       where: { isFavourite: true, projectId: id },
+//     });
 
-    if (data.length === 0) {
+//     if (data.length === 0) {
+//       throw new Error("No data Found");
+//     }
+//     return data;
+//   } catch (error: unknown) {
+//     if (typeof error === "object" && error) {
+//       if ("message" in error)
+//         throw new Error(error?.message as unknown as string);
+//     }
+//     throw new Error("Internal Server error");
+//   }
+// };
+
+// export const getAllSharedProjectFileService = async (id: string) => {
+//   try {
+//     const data = await projectFileRepository.find({
+//       where: { isShared: false, projectId: id },
+//     });
+
+//     if (data.length === 0) {
+//       throw new Error("No data Found");
+//     }
+//     return data;
+//   } catch (error: unknown) {
+//     if (typeof error === "object" && error) {
+//       if ("message" in error)
+//         throw new Error(error?.message as unknown as string);
+//     }
+//     throw new Error("Internal Server error");
+//   }
+// };
+
+// export const getAllProjectFileService = async (id: string) => {
+//   try {
+//     const folder = await projectFileRepository.findBy({
+//       projectId: id,
+//     });
+//     if (!folder) {
+//       throw new Error("Project File Not Found");
+//     }
+//     return folder;
+//   } catch (error: unknown) {
+//     if (typeof error === "object" && error) {
+//       if ("message" in error)
+//         throw new Error(error?.message as unknown as string);
+//     }
+//     throw new Error("Internal Server error");
+//   }
+// };
+
+export const getAllFolderByUserIdService = async (filters:any) => {
+  try {
+    const folder = await projectFileRepository.findBy(filters);
+    if (folder.length === 0) {
       throw new Error("No data Found");
-    }
-    return data;
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
-  }
-};
-
-export const getAllSharedProjectFileService = async (id: string) => {
-  try {
-    const data = await projectFileRepository.find({
-      where: { isShared: false,projectId:id },
-    });
-
-    if (data.length === 0) {
-      throw new Error("No data Found");
-    }
-    return data;
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
-  }
-};
-
-export const getAllProjectFileService = async (id: string) => {
-  try {
-    const folder = await projectFileRepository.findBy({
-      projectId: id,
-    });
-    if (!folder) {
-      throw new Error("Project File Not Found");
     }
     return folder;
   } catch (error: unknown) {
