@@ -20,7 +20,7 @@ export const registerService = async (
       email: email,
     });
     if (existingUserEmail) {
-      throw new Error("User with same name already exists");
+      throw new Error("User with same email already exists");
     }
     const hashPassword = await bcrypt.hash(password, 10);
     const user = curr_User.create({
