@@ -68,6 +68,7 @@ export const  getAllCtrl = async (req: Request, res: Response) => {
     }
 
     user.profileImage = `${user.profileImage}`;
+    user.password="";
     res.status(200).send({
       user: user,
     });

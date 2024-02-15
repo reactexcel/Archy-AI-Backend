@@ -2,7 +2,9 @@ import { Request, Response } from "express";
 import {
   createProjectService,
   deleteProjectService,
+  getAllFavouriteProjectService,
   getAllProjectService,
+  getAllSharedProjectService,
   getProjectService,
   updateProjectService,
 } from "../services/project.services";
@@ -41,6 +43,37 @@ export const getProject = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const getAllFavouriteProject = async (req: Request, res: Response) => {
+  try {
+    const {id} = req.params;
+    const response = await getAllFavouriteProjectService(id);
+    res.status(200).json({
+      message: "",
+      data: response,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+export const getAllSharedProject = async (req: Request, res: Response) => {
+  try {
+    const {id} = req.params;
+    const response = await getAllSharedProjectService(id);
+    res.status(200).json({
+      message: "",
+      data: response,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
 
 export const getAllProject = async (req: Request, res: Response) => {
   try {

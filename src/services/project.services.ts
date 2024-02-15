@@ -52,10 +52,44 @@ export const getProjectService = async (id: string) => {
   }
 };
 
+export const getAllFavouriteProjectService = async (id: string) => {
+  try {
+    const data = await projectRepository.find({ where: { isFavourite: true } });
+
+    if (data.length === 0) {
+      throw new Error("No data Found");
+    }
+    return data;
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
+  }
+};
+
+export const getAllSharedProjectService = async (id: string) => {
+  try {
+    const data = await projectRepository.find({ where: { isShared: true } });
+
+    if (data.length === 0) {
+      throw new Error("No data Found");
+    }
+    return data;
+  } catch (error: unknown) {
+    if (typeof error === "object" && error) {
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
+    }
+    throw new Error("Internal Server error");
+  }
+};
+
 export const getAllProjectService = async (id: string) => {
   try {
     const project = await projectRepository.findBy({
-      userId:id,
+      userId: id,
     });
     if (!project) {
       throw new Error("Project Not Found");
