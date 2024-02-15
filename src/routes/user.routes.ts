@@ -15,11 +15,11 @@ import { verifyFirebaseToken, verifyUser } from "../middlewares/verifyUser";
 
 const router = express.Router();
 
-router.post("/signup",registerCtrl);
+router.post("/signup", upload.single("profile"), registerCtrl);
 router.post("/sendOTP", sendOTP);
 router.post("/verifyOTP", verifyOTP);
 router.post("/signIn", loginCtrl);
-router.post("/signInGoogle",upload.single("profile"), loginGoogleCtrl);
+router.post("/signInGoogle", upload.single("profile"), loginGoogleCtrl);
 router.get("/get-user", verifyUser, getAllCtrl);
 router.put(
   "/update-profile/:id",

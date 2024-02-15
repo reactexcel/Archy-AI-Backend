@@ -2,7 +2,9 @@ import { Request, Response } from "express";
 import {
   createProjectFileService,
   deleteProjectFileService,
+  getAllFavouriteProjectFileService,
   getAllProjectFileService,
+  getAllSharedProjectFileService,
   getProjectFileService,
   updateProjectFileService,
 } from "../services/project-file.services";
@@ -32,6 +34,36 @@ export const getProjectFile = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const response = await getProjectFileService(id);
+    res.status(200).json({
+      message: "Project File fetched Successfully",
+      data: response,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+export const getAllFavouriteProjectFile = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.user as reqInterface;
+    const response = await getAllFavouriteProjectFileService(id);
+    res.status(200).json({
+      message: "Project File fetched Successfully",
+      data: response,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+export const getAllSharedProjectFile = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.user as reqInterface;
+    const response = await getAllSharedProjectFileService(id);
     res.status(200).json({
       message: "Project File fetched Successfully",
       data: response,

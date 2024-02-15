@@ -57,8 +57,8 @@ export const loginCtrl = async (req: Request, res: Response) => {
     const { email, password } = req.body;
     const response = await loginService(email, password);
     res.status(200).json({
-      message: "Access Token",
-      data: response,
+      message: "Successfully Logged In",
+      token: response,
     });
     
   } catch (error: any) {
