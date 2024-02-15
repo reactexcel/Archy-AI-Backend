@@ -8,30 +8,36 @@ import fs from "fs";
 const curr_User = AppDataSource.getRepository(User);
 
 //Sigup Service
-export const registerService = async (req: Request, res: Response) => {
-  const { username, email, password, locations } = req.body;
+export const registerService = async (
+  username: string,
+  email: string,
+  password: string,
+  locations: string,
+  fileName: string
+) => {
   try {
     const existingUserEmail = await curr_User.findOneBy({
-      email,
+      email: email,
     });
     if (existingUserEmail) {
-      throw new Error("Folder with same name already exists");
+      throw new Error("User with same name already exists");
     }
     const hashPassword = await bcrypt.hash(password, 10);
     const user = curr_User.create({
-      id: uuidv4(),
+      id:uuidv4(),
       username,
       email,
       password: hashPassword,
       locations,
-      profileImage: req.file?.filename,
+      profileImage: fileName,
     });
 
     const saveUser = await curr_User.save(user);
     return saveUser;
-  }  catch (error: unknown) {
+  } catch (error: unknown) {
     if (typeof error === "object" && error) {
-      if ("message" in error) throw new Error(error?.message as unknown as string);
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
     }
     throw new Error("Internal Server error");
   }
@@ -61,9 +67,10 @@ export const registerGoogleService = async (req: Request, res: Response) => {
       res.status(404).json({ message: "error in saving user" });
     }
     return saveUser;
-  }  catch (error: unknown) {
+  } catch (error: unknown) {
     if (typeof error === "object" && error) {
-      if ("message" in error) throw new Error(error?.message as unknown as string);
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
     }
     throw new Error("Internal Server error");
   }
@@ -86,31 +93,27 @@ export const loginGoogleService = async (req: Request, res: Response) => {
         .status(200)
         .json({ message: "Successfully Logged In", token: access_token });
     }
-  }  catch (error: unknown) {
+  } catch (error: unknown) {
     if (typeof error === "object" && error) {
-      if ("message" in error) throw new Error(error?.message as unknown as string);
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
     }
     throw new Error("Internal Server error");
   }
 };
 
 //Login service
-export const loginService = async (
-  email: string,
-  password: string,
-  res: Response
-) => {
+export const loginService = async (email: string, password: string) => {
   const user = await curr_User.findOneBy({
-    email,
+    email: email,
   });
 
   if (!user) {
-    throw new Error('User Not found')
-    
+    throw new Error("User Not found");
   }
-  const result =await bcrypt.compare(password, user.password);
+  const result = await bcrypt.compare(password, user.password);
   if (!result) {
-    throw new Error('Wrong Password')
+    throw new Error("Wrong Password");
   } else {
     const access_token = generateToken({ id: user.id, email: user.email });
     return access_token;
@@ -141,9 +144,10 @@ export const updateProfileService = async (req: Request, res: Response) => {
     return res
       .status(200)
       .json({ message: "User profile updated successfully" });
-  }  catch (error: unknown) {
+  } catch (error: unknown) {
     if (typeof error === "object" && error) {
-      if ("message" in error) throw new Error(error?.message as unknown as string);
+      if ("message" in error)
+        throw new Error(error?.message as unknown as string);
     }
     throw new Error("Internal Server error");
   }

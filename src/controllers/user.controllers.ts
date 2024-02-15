@@ -20,12 +20,20 @@ const userRepository = AppDataSource.getRepository(User);
 //SignUp User
 export const registerCtrl = async (req: Request, res: Response) => {
   try {
-    const user = await registerService(req, res);
-
-    if (user) {
-      return res.status(201).send({ message: ` Registered successfully ..` });
-    }
-  }  catch (error: any) {
+    const { username, email, password, locations } = req.body;
+    const fileName = req.file?.filename || "";
+    const response = await registerService(
+      username,
+      email,
+      password,
+      locations,
+      fileName
+    );
+    res.status(200).json({
+      message: "User",
+      data: response,
+    });
+  } catch (error: any) {
     res.status(500).json({
       error: error.message,
     });
@@ -36,7 +44,7 @@ export const registerCtrl = async (req: Request, res: Response) => {
 export const loginGoogleCtrl = async (req: Request, res: Response) => {
   try {
     await loginGoogleService(req, res);
-  }  catch (error: any) {
+  } catch (error: any) {
     res.status(500).json({
       error: error.message,
     });
@@ -47,11 +55,13 @@ export const loginGoogleCtrl = async (req: Request, res: Response) => {
 export const loginCtrl = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    const access_token = await loginService(email, password, res);
-    res
-      .status(200)
-      .json({ message: "Successfully Logged In", token: access_token });
-  }  catch (error: any) {
+    const response = await loginService(email, password);
+    res.status(200).json({
+      message: "Access Token",
+      data: response,
+    });
+    
+  } catch (error: any) {
     res.status(500).json({
       error: error.message,
     });
@@ -59,7 +69,7 @@ export const loginCtrl = async (req: Request, res: Response) => {
 };
 
 //Get All User
-export const  getAllCtrl = async (req: Request, res: Response) => {
+export const getAllCtrl = async (req: Request, res: Response) => {
   try {
     const { id }: any = req.user;
     const user = await userRepository.findOneBy({ id });
@@ -68,11 +78,11 @@ export const  getAllCtrl = async (req: Request, res: Response) => {
     }
 
     user.profileImage = `${user.profileImage}`;
-    user.password="";
+    user.password = "";
     res.status(200).send({
       user: user,
     });
-  }  catch (error: any) {
+  } catch (error: any) {
     res.status(500).json({
       error: error.message,
     });
@@ -113,7 +123,7 @@ export const sendOTP = async (req: Request, res: Response) => {
     const token = generateToken({ email, newOtp });
 
     res.json({ message: "OTP sent successfully", token });
-  }  catch (error: any) {
+  } catch (error: any) {
     res.status(500).json({
       error: error.message,
     });
@@ -134,7 +144,7 @@ export const verifyOTP = (req: Request, res: Response) => {
     } else {
       res.status(400).json({ message: "Invalid OTP" });
     }
-  }  catch (error: any) {
+  } catch (error: any) {
     res.status(500).json({
       error: error.message,
     });
