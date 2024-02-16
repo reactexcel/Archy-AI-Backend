@@ -7,6 +7,7 @@ import { Project } from "../entity/project.model";
 import { Folder } from "../entity/folder.model";
 import { FolderFile } from "../entity/folder-file.model";
 import { ProjectFile } from "../entity/project-file.model";
+import { Favourite } from "../entity/favourite.model";
 dotenv.config();
 const AppDataSource = new DataSource({
   type: "postgres",
@@ -15,7 +16,7 @@ const AppDataSource = new DataSource({
   username: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
-  entities: [Otp, User, Folder, Project, FolderFile, ProjectFile],
+  entities: [Otp, User, Folder, Project, FolderFile, ProjectFile , Favourite],
   synchronize: true,
 });
 

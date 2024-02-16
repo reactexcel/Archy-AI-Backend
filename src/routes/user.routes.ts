@@ -20,8 +20,8 @@ router.post("/sendOTP", sendOTP);
 router.post("/verifyOTP", verifyOTP);
 router.post("/signIn", loginCtrl);
 router.post("/signInGoogle", upload.single("profile"), loginGoogleCtrl);
-router.get("/get-user", verifyUser, getAllCtrl);
-router.put(
+router.get("/get-user/:id", verifyUser, getAllCtrl);
+router.patch(
   "/update-profile/:id",
   verifyUser,
   upload.single("profile"),

@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, response } from "express";
 import AppDataSource from "../config/database.config";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcryptjs";
@@ -7,7 +7,6 @@ import { generateToken } from "../utils/jwt.util";
 import fs from "fs";
 const curr_User = AppDataSource.getRepository(User);
 
-//Sigup Service
 export const registerService = async (
   username: string,
   email: string,
@@ -34,12 +33,8 @@ export const registerService = async (
 
     const saveUser = await curr_User.save(user);
     return saveUser;
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+    throw new Error(`error ${error.message}`);
   }
 };
 
@@ -67,15 +62,11 @@ export const registerGoogleService = async (req: Request, res: Response) => {
       res.status(404).json({ message: "error in saving user" });
     }
     return saveUser;
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+    throw new Error(`error ${error.message}`);
   }
 };
-//Login with google service
+
 export const loginGoogleService = async (req: Request, res: Response) => {
   const { email } = req.body;
   try {
@@ -93,16 +84,11 @@ export const loginGoogleService = async (req: Request, res: Response) => {
         .status(200)
         .json({ message: "Successfully Logged In", token: access_token });
     }
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+    throw new Error(`error ${error.message}`);
   }
 };
 
-//Login service
 export const loginService = async (email: string, password: string) => {
   const user = await curr_User.findOneBy({
     email: email,
@@ -116,7 +102,11 @@ export const loginService = async (email: string, password: string) => {
     throw new Error("Wrong Password");
   } else {
     const access_token = generateToken({ id: user.id, email: user.email });
-    return access_token;
+   let response = {
+       data: user,
+       token: access_token
+   }
+   return response
   }
 };
 
@@ -125,41 +115,37 @@ export const getUserService = async (id: string) => {
   if (!user) {
     throw new Error("User not Found");
   }
-
   user.profileImage = `${user.profileImage}`;
-  user.password = "";
   return user;
 };
 
-export const updateProfileService = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { username, password, newPassword, locations } = req.body;
+export const updateProfileService = async (id:string,username:string, password:string, newPassword: string, locations:string,file:any) => {
   try {
     let user = await curr_User.findOneBy({ id });
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      throw new Error("User not found");
     }
-    const result = await bcrypt.compare(password, user.password);
-    if (!result) {
-      return res.status(404).json({ message: "Wrong password" });
+    if (password && newPassword) {
+      const result = await bcrypt.compare(password, user.password);
+      if (!result) {
+        throw new Error("Wrong password");
+      }
+      const hashPassword = await bcrypt.hash(newPassword, 10);
+      user.password = hashPassword;
     }
-    if (req.file) {
+    if (username) {
+      user.username = username;
+    }
+    if (locations) {
+      user.locations = locations;
+    }
+    if (file) {
       if (fs.existsSync(user.profileImage)) fs.unlinkSync(user.profileImage);
-      user.profileImage = req.file.filename;
+      user.profileImage = file.filename;
     }
-    const hashPassword = await bcrypt.hash(newPassword, 10);
-    user.username = username || user.username;
-    user.password = hashPassword || user.password;
-    user.locations = locations || user.locations;
     await curr_User.save(user);
-    return res
-      .status(200)
-      .json({ message: "User profile updated successfully" });
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+    return user; 
+  } catch (error) {
+    throw error; 
   }
 };

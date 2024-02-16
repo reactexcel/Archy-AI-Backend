@@ -26,12 +26,8 @@ export const createFolderFileService = async (
     });
     const savedFolderFile = await folderFileRepository.save(folderFile);
     return savedFolderFile;
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+      throw new Error(`error ${error.message}`)
   }
 };
 
@@ -45,12 +41,8 @@ export const deleteFolderFileService = async (id: string) => {
     }
     await folderFileRepository.delete({ id });
     return folderFile;
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+      throw new Error(`error ${error.message}`)
   }
 };
 
@@ -63,12 +55,8 @@ export const getFolderFileService = async (id: string) => {
       throw new Error("Folder File Not Found");
     }
     return folderFile;
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+      throw new Error(`error ${error.message}`)
   }
 };
 
@@ -79,12 +67,8 @@ export const getAllFolderFileService = async (filters:filterInterface) => {
       throw new Error("No data Found");
     }
     return folder;
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+      throw new Error(`error ${error.message}`)
   }
 };
 
@@ -104,11 +88,7 @@ export const updateFolderFileService = async (
     folderFile.isFavourite = isFavourite || folderFile.isFavourite;
     const savedFolderFile = await folderFileRepository.save(folderFile);
     return savedFolderFile;
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+      throw new Error(`error ${error.message}`)
   }
 };

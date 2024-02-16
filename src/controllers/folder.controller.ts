@@ -27,20 +27,19 @@ export const createFolder = async (req: Request, res: Response) => {
       message: "Saved Folder successfully",
       data: response,
     });
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
 export const createDuplicateFolder = async (req: Request, res: Response) => {
   try {
+    const {folderId}=req.params;
     const { id } = req.user as reqInterface;
     const existingFolder = await folderRepository.findOneBy({
-      id,
+      userId:id,id:folderId
     });
     if(!existingFolder){
       throw new Error('Folder Not Found');
@@ -51,16 +50,14 @@ export const createDuplicateFolder = async (req: Request, res: Response) => {
       existingFolder.isFavourite,
       id
     );
-    res.status(200).json({
+    res.status(201).json({
       message: "Duplicate Folder created successfully",
       data: response,
     });
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
@@ -72,12 +69,8 @@ export const getFolder = async (req: Request, res: Response) => {
       message: "Folder",
       data: response,
     });
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
   }
 };
 
@@ -98,12 +91,8 @@ export const getAllFolderByUserId = async (req: Request, res: Response) => {
       message: "",
       data: response,
     });
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
   }
 };
 
@@ -115,12 +104,10 @@ export const deleteFolder = async (req: Request, res: Response) => {
       message: "Folder deleted Successfully",
       data: response,
     });
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
@@ -131,11 +118,9 @@ export const updateFolder = async (req: Request, res: Response) => {
       message: "Folder deleted Successfully",
       data: response,
     });
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };

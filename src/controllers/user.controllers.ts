@@ -33,24 +33,20 @@ export const registerCtrl = async (req: Request, res: Response) => {
       message: "User",
       data: response,
     });
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
 export const loginGoogleCtrl = async (req: Request, res: Response) => {
   try {
     await loginGoogleService(req, res);
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
@@ -60,44 +56,46 @@ export const loginCtrl = async (req: Request, res: Response) => {
     const response = await loginService(email, password);
     res.status(200).json({
       message: "Successfully Logged In",
-      token: response,
+      data: response.data,
+      token: response.token
     });
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
 export const getAllCtrl = async (req: Request, res: Response) => {
   try {
-    const { id } = req.user as reqInterface;
+    const { id } = req.params;
     const response = await getUserService(id);
     res.status(200).json({
       message: "User",
       user: response,
     });
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
 // Update user profile route
 export const updateProfile = async (req: Request, res: Response) => {
   try {
-    const user = await updateProfileService(req, res);
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+    const { id } = req.params;
+    const { username, password, newPassword, locations } = req.body;
+    const file = req.file; 
+    const user = await updateProfileService(id,username, password, newPassword, locations,file); 
+    res.status(200).json({
+      message: "User profile updated successfully",
+      user: user 
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 //Send Otp
@@ -124,12 +122,10 @@ export const sendOTP = async (req: Request, res: Response) => {
     const token = generateToken({ email, newOtp });
 
     res.json({ message: "OTP sent successfully", token });
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
@@ -147,12 +143,10 @@ export const verifyOTP = (req: Request, res: Response) => {
     } else {
       res.status(400).json({ message: "Invalid OTP" });
     }
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 

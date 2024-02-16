@@ -7,9 +7,8 @@ import { createDuplicateFolder, createFolder, deleteFolder, getAllFolderByUserId
 const router = express.Router();
 
 router.post("/create",verifyUser, createFolder);
-router.post("/duplicate/:id",verifyUser, createDuplicateFolder);
+router.post("/duplicate/:folderId",verifyUser, createDuplicateFolder);
 router.delete("/:id",verifyUser, deleteFolder);
-router.put("/",verifyUser, deleteFolder);
 
 // router.get("/shared/:id", verifyUser, getAllSharedFolder);
 // router.get("/favourite/:id", verifyUser, getAllFavouriteFolder);

@@ -14,7 +14,7 @@ export const verifyUser = async (
     if (!token)
       return res
         .status(403)
-        .send({ message: "anauthorized or access token missing" });
+        .send({ message: "unauthorized or access token missing" });
     const decodedUser = verifyToken(token);
     if (!decodedUser) return res.status(401).send({ message: "unauthorized" });
     req.user = decodedUser;

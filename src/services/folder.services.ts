@@ -1,4 +1,3 @@
-import { AnyError } from "typeorm";
 import AppDataSource from "../config/database.config";
 import { Folder } from "../entity/folder.model";
 import { Request, Response } from "express";
@@ -13,13 +12,7 @@ export const createFolderService = async (
   id: string
 ) => {
   try {
-    const existingFolderName = await folderRepository.findOneBy({
-      title,
-      userId: id,
-    });
-    if (existingFolderName) {
-      throw new Error("Folder with same name already exists");
-    }
+    
     const folder = folderRepository.create({
       title,
       userId: id,
@@ -28,12 +21,8 @@ export const createFolderService = async (
     });
     const savedFolder = await folderRepository.save(folder);
     return savedFolder;
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+      throw new Error(`error ${error.message}`)
   }
 };
 
@@ -46,12 +35,8 @@ export const getFolderService = async (id: string) => {
       throw new Error("Folder Not Found");
     }
     return folder;
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+      throw new Error(`error ${error.message}`)
   }
 };
 
@@ -62,12 +47,8 @@ export const getAllFolderByUserIdService = async (filters:filterInterface) => {
       throw new Error("No data Found");
     }
     return folder;
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+    throw new Error(`error ${error.message}`)
   }
 };
 
@@ -81,12 +62,8 @@ export const deleteFolderService = async (id: string) => {
     }
     await folderRepository.delete({ id });
     return folder;
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+      throw new Error(`error ${error.message}`)
   }
 };
 
@@ -103,11 +80,7 @@ export const updateFolderService = async (req: Request, res: Response) => {
     folder.isFavourite = isFavourite || folder.isFavourite;
     const savedFolder = await folderRepository.save(folder);
     return savedFolder;
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+      throw new Error(`error ${error.message}`)
   }
 };

@@ -21,12 +21,10 @@ export const createFolderFile = async (req: Request, res: Response) => {
       message: "Folder File created Successfully",
       data: response,
     });
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
@@ -38,12 +36,10 @@ export const getFolderFile = async (req: Request, res: Response) => {
       message: "Folder File fetched Successfully",
       data: response,
     });
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
@@ -64,12 +60,10 @@ export const getAllFolderFile = async (req: Request, res: Response) => {
       message: "",
       data: response,
     });
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
@@ -81,12 +75,10 @@ export const deleteFolderFile = async (req: Request, res: Response) => {
       message: "Folder File deleted Successfully",
       data: response,
     });
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
@@ -104,11 +96,9 @@ export const updateFolderFile = async (req: Request, res: Response) => {
       message: "Folder File updated Successfully",
       data: response,
     });
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };

@@ -10,6 +10,7 @@ import {
 } from "typeorm";
 import { User } from "./user.model";
 import { ProjectFile } from "./project-file.model";
+import { Favourite } from "./favourite.model";
 
 @Entity()
 class Project {
@@ -19,28 +20,28 @@ class Project {
   @Column()
   title!: string;
 
-  @Column({default:""})
+  @Column({ default: "" })
   image!: string;
 
   @Column()
   userId!: string;
 
-  @Column({default:0})
+  @Column({ default: 0 })
   loveEmoji!: number;
 
-  @Column({default:0})
+  @Column({ default: 0 })
   fireEmoji!: number;
 
-  @Column({default:0})
+  @Column({ default: 0 })
   smileEmoji!: number;
 
-  @Column({default:0})
+  @Column({ default: 0 })
   angerEmoji!: number;
 
-  @Column({default:false})
+  @Column({ default: false })
   isFavourite!: boolean;
 
-  @Column({default:false})
+  @Column({ default: false })
   isShared!: boolean;
 
   @CreateDateColumn()
@@ -53,8 +54,11 @@ class Project {
   @JoinColumn({ name: "userId" })
   user!: User;
 
-  @OneToMany(() => ProjectFile, projectFile => projectFile.project)
+  @OneToMany(() => ProjectFile, (projectFile) => projectFile.project)
   projectFile!: ProjectFile[];
+
+  @OneToMany(() => Favourite, (favourite) => favourite.project)
+  favourite!: Favourite[];
 }
 
 export { Project };

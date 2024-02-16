@@ -29,12 +29,8 @@ export const createProjectFileService = async (
     const savedProject = await projectFileRepository.save(ProjectFile);
 
     return savedProject;
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+      throw new Error(`error ${error.message}`)
   }
 };
 
@@ -50,12 +46,8 @@ export const deleteProjectFileService = async (id: string) => {
     await projectFileRepository.delete({ id });
 
     return projectFile;
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+      throw new Error(`error ${error.message}`)
   }
 };
 
@@ -66,12 +58,8 @@ export const getAllProjectFileService = async (filters:filterInterface) => {
       throw new Error("No data Found");
     }
     return folder;
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+      throw new Error(`error ${error.message}`)
   }
 };
 
@@ -84,12 +72,8 @@ export const getProjectFileService = async (id: string) => {
       throw new Error("Project File Not Found");
     }
     return folder;
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+      throw new Error(`error ${error.message}`)
   }
 };
 
@@ -100,12 +84,8 @@ export const getAllFolderByUserIdService = async (filters:filterInterface) => {
       throw new Error("No data Found");
     }
     return folder;
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+      throw new Error(`error ${error.message}`)
   }
 };
 
@@ -125,11 +105,7 @@ export const updateProjectFileService = async (
     projectFile.isFavourite = isFavourite || projectFile.isFavourite;
     const savedProjectFile = await projectFileRepository.save(projectFile);
     return savedProjectFile;
-  } catch (error: unknown) {
-    if (typeof error === "object" && error) {
-      if ("message" in error)
-        throw new Error(error?.message as unknown as string);
-    }
-    throw new Error("Internal Server error");
+  } catch (error: any) {
+      throw new Error(`error ${error.message}`)
   }
 };
