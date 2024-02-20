@@ -11,7 +11,7 @@ import {
 
 const router = express.Router();
 
-router.post("/create", verifyUser, createFolderFile);
+router.post("/create/:id", verifyUser,upload.single("image"), createFolderFile);
 router.delete("/:id", verifyUser, deleteFolderFile);
 router.get("/all/:id", verifyUser, getAllFolderFile);
 router.get("/:id", verifyUser, getFolderFile);

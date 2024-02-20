@@ -10,13 +10,9 @@ import { filterInterface } from "../interfaces/filter.interface";
 
 export const createFolderFile = async (req: Request, res: Response) => {
   try {
-    const { name, folderId, isShared, isFavourite } = req.body;
-    const response = await createFolderFileService(
-      name,
-      folderId,
-      isShared,
-      isFavourite
-    );
+    const { id } = req.params;
+    const name = req.file?.filename || "";
+    const response = await createFolderFileService(name, id);
     res.status(200).json({
       message: "Folder File created Successfully",
       data: response,
@@ -46,16 +42,8 @@ export const getFolderFile = async (req: Request, res: Response) => {
 export const getAllFolderFile = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { isShared, isFavourite } = req.query;
 
-    let filters = { userId: id } as filterInterface;
-    if (isShared !== undefined) {
-      filters.isShared = isShared === 'true';
-    }
-    if (isFavourite !== undefined) {
-      filters.isFavourite = isFavourite === 'true';
-    }
-    const response = await getAllFolderFileService(filters);
+    const response = await getAllFolderFileService(id);
     res.status(200).json({
       message: "",
       data: response,
@@ -85,13 +73,8 @@ export const deleteFolderFile = async (req: Request, res: Response) => {
 export const updateFolderFile = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { name, isShared, isFavourite } = req.body;
-    const response = await updateFolderFileService(
-      id,
-      name,
-      isShared,
-      isFavourite
-    );
+    const { name } = req.body;
+    const response = await updateFolderFileService(id, name);
     res.status(200).json({
       message: "Folder File updated Successfully",
       data: response,

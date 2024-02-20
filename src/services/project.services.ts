@@ -2,10 +2,8 @@ import AppDataSource from "../config/database.config";
 import { Project } from "../entity/project.model";
 import fs from "fs";
 import { filterInterface } from "../interfaces/filter.interface";
-import { Favourite } from "../entity/favourite.model";
 
 const projectRepository = AppDataSource.getRepository(Project);
-const favouriteRepository = AppDataSource.getRepository(Favourite);
 
 export const createProjectService = async (
   title: string,
@@ -23,6 +21,7 @@ export const createProjectService = async (
       isFavourite,
     });
     const savedProject = await projectRepository.save(Project);
+    console.table(savedProject);
     return savedProject;
   } catch (error: any) {
     throw new Error(`error ${error.message}`);
@@ -108,18 +107,23 @@ export const updateProjectService = async (
   }
 };
 
-export const addOrRemoveProjectToFavouriteByIdService = async (projectId:string ) => {
-try{
-  let favourite = await favouriteRepository.findOne({where:{ projectId} });
-  console.log(projectId,favourite)
-  if(favourite!==null){
-    await favouriteRepository.delete({ projectId });
-  }else{
-    favourite= favouriteRepository.create({projectId});
-   return await favouriteRepository.save(favourite);
+export const addOrRemoveProjectToFavouriteByIdService = async (
+  projectId: string,
+  isFavourite: boolean
+) => {
+  try {
+    let project = await projectRepository.findOne({ where: { id: projectId } });
+    if (!project) {
+      throw new Error("project not found");
+    }
+    if (isFavourite == true) {
+      project.isFavourite = true;
+      return await projectRepository.save(project);
+    } else {
+      project.isFavourite = false;
+      return await projectRepository.save(project);
+    }
+  } catch (error: any) {
+    throw new Error(`error ${error.message}`);
   }
-    
-}catch(error:any){
-  throw new Error(`error ${error.message}`);
-}
-}
+};

@@ -7,22 +7,14 @@ const folderFileRepository = AppDataSource.getRepository(FolderFile);
 export const createFolderFileService = async (
   name: string,
   folderId: string,
-  isShared: boolean,
-  isFavourite: boolean
+
 ) => {
   try {
-    const existingFolderFileName = await folderFileRepository.findOneBy({
-      name,
-      folderId,
-    });
-    if (existingFolderFileName) {
-      throw new Error("Folder File already exists");
-    }
+    
     const folderFile = folderFileRepository.create({
       name,
       folderId,
-      isShared,
-      isFavourite,
+    
     });
     const savedFolderFile = await folderFileRepository.save(folderFile);
     return savedFolderFile;
@@ -60,9 +52,9 @@ export const getFolderFileService = async (id: string) => {
   }
 };
 
-export const getAllFolderFileService = async (filters:filterInterface) => {
+export const getAllFolderFileService = async (folderId:string) => {
   try {
-    const folder = await folderFileRepository.findBy(filters);
+    const folder = await folderFileRepository.findBy({folderId});
     if (folder.length === 0) {
       throw new Error("No data Found");
     }
@@ -75,8 +67,7 @@ export const getAllFolderFileService = async (filters:filterInterface) => {
 export const updateFolderFileService = async (
   id: string,
   name: string,
-  isShared: boolean,
-  isFavourite: boolean
+ 
 ) => {
   try {
     let folderFile = await folderFileRepository.findOneBy({ id: id });
@@ -84,8 +75,6 @@ export const updateFolderFileService = async (
       throw new Error("Folder File Not Found");
     }
     folderFile.name = name || folderFile.name;
-    folderFile.isShared = isShared || folderFile.isShared;
-    folderFile.isFavourite = isFavourite || folderFile.isFavourite;
     const savedFolderFile = await folderFileRepository.save(folderFile);
     return savedFolderFile;
   } catch (error: any) {

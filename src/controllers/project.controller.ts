@@ -148,7 +148,7 @@ export const addOrRemoveProjectToFavouriteById = async (req:Request, res:Respons
   try{
     const { id } = req.params;
     const {isFavourite} = req.body;
-    const response = await addOrRemoveProjectToFavouriteByIdService(id)
+    const response = await addOrRemoveProjectToFavouriteByIdService(id,isFavourite)
     res.status(200).json({
       message: "project added to favourite",
       data: response,
