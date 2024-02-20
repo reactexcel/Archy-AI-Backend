@@ -2,8 +2,10 @@ import AppDataSource from "../config/database.config";
 import { Project } from "../entity/project.model";
 import fs from "fs";
 import { filterInterface } from "../interfaces/filter.interface";
+import { User } from "../entity/user.model";
 
 const projectRepository = AppDataSource.getRepository(Project);
+const curr_User = AppDataSource.getRepository(User);
 
 export const createProjectService = async (
   title: string,
@@ -72,7 +74,7 @@ export const deleteProjectService = async (id: string) => {
     if (!project) {
       throw new Error("Project not found");
     }
-
+    fs.unlinkSync(project.image);
     await projectRepository.delete({ id });
 
     return project;

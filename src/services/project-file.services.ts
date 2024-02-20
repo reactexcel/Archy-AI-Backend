@@ -2,6 +2,7 @@ import AppDataSource from "../config/database.config";
 import { Request, Response } from "express";
 import { ProjectFile } from "../entity/project-file.model";
 import { filterInterface } from "../interfaces/filter.interface";
+import fs from "fs";
 
 const projectFileRepository = AppDataSource.getRepository(ProjectFile);
 
@@ -42,6 +43,7 @@ export const deleteProjectFileService = async (id: string) => {
     if (!projectFile) {
       throw new Error("Project File Not Found");
     }
+    fs.unlinkSync(projectFile.name);
 
     await projectFileRepository.delete({ id });
 
