@@ -1,7 +1,7 @@
 import AppDataSource from "../config/database.config";
 import { FolderFile } from "../entity/folder-file.model";
 import { filterInterface } from "../interfaces/filter.interface";
-
+import fs from "fs";
 const folderFileRepository = AppDataSource.getRepository(FolderFile);
 
 export const createFolderFileService = async (
@@ -31,6 +31,7 @@ export const deleteFolderFileService = async (id: string) => {
     if (!folderFile) {
       throw new Error("Folder File Not Found");
     }
+    fs.unlinkSync(folderFile.name);
     await folderFileRepository.delete({ id });
     return folderFile;
   } catch (error: any) {
