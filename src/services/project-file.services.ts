@@ -1,9 +1,9 @@
 import AppDataSource from "../config/database.config";
-import { Request, Response } from "express";
 import { ProjectFile } from "../entity/project-file.model";
 import { filterInterface } from "../interfaces/filter.interface";
 import fs from "fs";
-
+import path from "path";
+const dirpath = "/root/archy-ai/Archy-AI-Backend/src/";
 const projectFileRepository = AppDataSource.getRepository(ProjectFile);
 
 export const createProjectFileService = async (
@@ -31,7 +31,7 @@ export const createProjectFileService = async (
 
     return savedProject;
   } catch (error: any) {
-      throw new Error(`error ${error.message}`)
+    throw new Error(`error ${error.message}`);
   }
 };
 
@@ -43,17 +43,17 @@ export const deleteProjectFileService = async (id: string) => {
     if (!projectFile) {
       throw new Error("Project File Not Found");
     }
-    fs.unlinkSync(projectFile.name);
-
+    const filePath = path.join(dirpath, "uploads", projectFile.name);
+    await fs.promises.unlink(filePath);
     await projectFileRepository.delete({ id });
 
     return projectFile;
   } catch (error: any) {
-      throw new Error(`error ${error.message}`)
+    throw new Error(`error ${error.message}`);
   }
 };
 
-export const getAllProjectFileService = async (filters:filterInterface) => {
+export const getAllProjectFileService = async (filters: filterInterface) => {
   try {
     const folder = await projectFileRepository.findBy(filters);
     if (folder.length === 0) {
@@ -61,7 +61,7 @@ export const getAllProjectFileService = async (filters:filterInterface) => {
     }
     return folder;
   } catch (error: any) {
-      throw new Error(`error ${error.message}`)
+    throw new Error(`error ${error.message}`);
   }
 };
 
@@ -75,11 +75,11 @@ export const getProjectFileService = async (id: string) => {
     }
     return folder;
   } catch (error: any) {
-      throw new Error(`error ${error.message}`)
+    throw new Error(`error ${error.message}`);
   }
 };
 
-export const getAllFolderByUserIdService = async (filters:filterInterface) => {
+export const getAllFolderByUserIdService = async (filters: filterInterface) => {
   try {
     const folder = await projectFileRepository.findBy(filters);
     if (folder.length === 0) {
@@ -87,7 +87,7 @@ export const getAllFolderByUserIdService = async (filters:filterInterface) => {
     }
     return folder;
   } catch (error: any) {
-      throw new Error(`error ${error.message}`)
+    throw new Error(`error ${error.message}`);
   }
 };
 
@@ -108,6 +108,6 @@ export const updateProjectFileService = async (
     const savedProjectFile = await projectFileRepository.save(projectFile);
     return savedProjectFile;
   } catch (error: any) {
-      throw new Error(`error ${error.message}`)
+    throw new Error(`error ${error.message}`);
   }
 };

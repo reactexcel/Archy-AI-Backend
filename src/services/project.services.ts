@@ -2,10 +2,9 @@ import AppDataSource from "../config/database.config";
 import { Project } from "../entity/project.model";
 import fs from "fs";
 import { filterInterface } from "../interfaces/filter.interface";
-import { User } from "../entity/user.model";
-
+import path from "path";
+const dirpath = "/root/archy-ai/Archy-AI-Backend/src/";
 const projectRepository = AppDataSource.getRepository(Project);
-const curr_User = AppDataSource.getRepository(User);
 
 export const createProjectService = async (
   title: string,
@@ -44,7 +43,7 @@ export const getProjectService = async (id: string) => {
   }
 };
 
-export const getAllProjectService = async (filters: any) => {
+export const getAllProjectService = async (filters: filterInterface) => {
   try {
     let folder;
     if (filters.isRecent == true) {
@@ -74,7 +73,8 @@ export const deleteProjectService = async (id: string) => {
     if (!project) {
       throw new Error("Project not found");
     }
-    fs.unlinkSync(project.image);
+    const filePath = path.join(dirpath, "uploads", project.image);
+    await fs.promises.unlink(filePath);
     await projectRepository.delete({ id });
 
     return project;
