@@ -11,7 +11,8 @@ import {
   verifyOTP,
 } from "../controllers/user.controllers";
 import { upload } from "../utils/uploadImage.util";
-import { verifyFirebaseToken, verifyUser } from "../middlewares/verifyUser";
+import { verifyUser } from "../middlewares/verifyUser";
+import { decodedToken } from "../middlewares/firebaseAuth";
 
 const router = express.Router();
 
@@ -19,7 +20,7 @@ router.post("/signup", upload.single("profile"), registerCtrl);
 router.post("/sendOTP", sendOTP);
 router.post("/verifyOTP", verifyOTP);
 router.post("/signIn", loginCtrl);
-router.post("/signInGoogle", upload.single("profile"), loginGoogleCtrl);
+router.post("/signInGoogle",decodedToken,upload.single("profile"), loginGoogleCtrl);
 router.get("/get-user/:id", verifyUser, getAllCtrl);
 router.patch(
   "/update-profile/:id",
