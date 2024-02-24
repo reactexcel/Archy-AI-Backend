@@ -30,7 +30,8 @@ export const createProject = async (req: Request, res: Response) => {
       message: "Saved Project successfully",
       data: response,
     });
-  } catch (error: any) {
+  } catch (error) {
+    if(error instanceof Error)
     res.status(500).json({
       error: error.message,
     });
@@ -59,7 +60,8 @@ export const createDuplicateProject = async (req: Request, res: Response) => {
       message: "Duplicate Project created successfully",
       data: response,
     });
-  } catch (error: any) {
+  } catch (error) {
+    if(error instanceof Error)
     res.status(500).json({
       error: error.message,
     });
@@ -99,7 +101,8 @@ export const getProject = async (req: Request, res: Response) => {
       message: "Project",
       data: response,
     });
-  } catch (error: any) {
+  } catch (error) {
+    if(error instanceof Error)
     res.status(500).json({
       error: error.message,
     });
@@ -114,7 +117,8 @@ export const deleteProject = async (req: Request, res: Response) => {
       message: "Deleted Project successfully",
       data: response,
     });
-  } catch (error: any) {
+  } catch (error) {
+    if(error instanceof Error)
     res.status(500).json({
       error: error.message,
     });
@@ -137,7 +141,8 @@ export const updateProject = async (req: Request, res: Response) => {
       message: "Updated Project successfully",
       data: project,
     });
-  } catch (error: any) {
+  } catch (error) {
+    if(error instanceof Error)
     res.status(500).json({
       error: error.message,
     });
@@ -153,7 +158,8 @@ export const addOrRemoveProjectToFavouriteById = async (req:Request, res:Respons
       message: "project added to favourite",
       data: response,
     });
-  }catch (error: any) {
+  }catch (error) {
+    if(error instanceof Error)
     res.status(500).json({
       error: error.message,
     });

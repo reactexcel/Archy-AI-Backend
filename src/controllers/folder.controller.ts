@@ -27,7 +27,8 @@ export const createFolder = async (req: Request, res: Response) => {
       message: "Saved Folder successfully",
       data: response,
     });
-  } catch (error: any) {
+  } catch (error) {
+    if(error instanceof Error)
     res.status(500).json({
       error: error.message,
     });
@@ -54,7 +55,8 @@ export const createDuplicateFolder = async (req: Request, res: Response) => {
       message: "Duplicate Folder created successfully",
       data: response,
     });
-  } catch (error: any) {
+  } catch (error) {
+    if(error instanceof Error)
     res.status(500).json({
       error: error.message,
     });
@@ -104,7 +106,8 @@ export const deleteFolder = async (req: Request, res: Response) => {
       message: "Folder deleted Successfully",
       data: response,
     });
-  } catch (error: any) {
+  } catch (error) {
+    if(error instanceof Error)
     res.status(500).json({
       error: error.message,
     });
@@ -118,7 +121,8 @@ export const updateFolder = async (req: Request, res: Response) => {
       message: "Folder deleted Successfully",
       data: response,
     });
-  } catch (error: any) {
+  } catch (error) {
+    if(error instanceof Error)
     res.status(500).json({
       error: error.message,
     });

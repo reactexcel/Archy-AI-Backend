@@ -33,7 +33,8 @@ export const registerService = async (
 
     const saveUser = await curr_User.save(user);
     return saveUser;
-  } catch (error: any) {
+  }catch (error) {
+    if(error instanceof Error)
     throw new Error(`error ${error.message}`);
   }
 };
@@ -62,7 +63,8 @@ export const registerGoogleService = async (req: Request, res: Response) => {
       res.status(404).json({ message: "error in saving user" });
     }
     return saveUser;
-  } catch (error: any) {
+  }catch (error) {
+    if(error instanceof Error)
     throw new Error(`error ${error.message}`);
   }
 };
@@ -84,7 +86,8 @@ export const loginGoogleService = async (req: Request, res: Response) => {
         .status(200)
         .json({ message: "Successfully Logged In", token: access_token });
     }
-  } catch (error: any) {
+  }catch (error) {
+    if(error instanceof Error)
     throw new Error(`error ${error.message}`);
   }
 };

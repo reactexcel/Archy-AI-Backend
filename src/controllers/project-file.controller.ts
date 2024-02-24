@@ -22,7 +22,8 @@ export const createProjectFile = async (req: Request, res: Response) => {
       message: "Project File created Successfully",
       data: response,
     });
-  } catch (error: any) {
+  } catch (error) {
+    if(error instanceof Error)
     res.status(500).json({
       error: error.message,
     });
@@ -37,7 +38,8 @@ export const getProjectFile = async (req: Request, res: Response) => {
       message: "Project File fetched Successfully",
       data: response,
     });
-  } catch (error: any) {
+  } catch (error) {
+    if(error instanceof Error)
     res.status(500).json({
       error: error.message,
     });
@@ -61,7 +63,8 @@ export const getAllProjectFile = async (req: Request, res: Response) => {
       message: "",
       data: response,
     });
-  } catch (error: any) {
+  } catch (error) {
+    if(error instanceof Error)
     res.status(500).json({
       error: error.message,
     });
@@ -76,7 +79,8 @@ export const deleteProjectFile = async (req: Request, res: Response) => {
       message: "Project File deleted Successfully",
       data: response,
     });
-  } catch (error: any) {
+  } catch (error) {
+    if(error instanceof Error)
     res.status(500).json({
       error: error.message,
     });
@@ -97,7 +101,8 @@ export const updateProjectFile = async (req: Request, res: Response) => {
       message: "Project File updated Successfully",
       data: response,
     });
-  } catch (error: any) {
+  } catch (error) {
+    if(error instanceof Error)
     res.status(500).json({
       error: error.message,
     });

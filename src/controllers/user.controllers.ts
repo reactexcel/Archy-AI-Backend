@@ -33,7 +33,8 @@ export const registerCtrl = async (req: Request, res: Response) => {
       message: "User",
       data: response,
     });
-  } catch (error: any) {
+  } catch (error) {
+    if(error instanceof Error)
     res.status(500).json({
       error: error.message,
     });
@@ -43,7 +44,8 @@ export const registerCtrl = async (req: Request, res: Response) => {
 export const loginGoogleCtrl = async (req: Request, res: Response) => {
   try {
     await loginGoogleService(req, res);
-  } catch (error: any) {
+  } catch (error) {
+    if(error instanceof Error)
     res.status(500).json({
       error: error.message,
     });
@@ -59,7 +61,8 @@ export const loginCtrl = async (req: Request, res: Response) => {
       data: response.data,
       token: response.token
     });
-  } catch (error: any) {
+  } catch (error) {
+    if(error instanceof Error)
     res.status(500).json({
       error: error.message,
     });
@@ -74,7 +77,8 @@ export const getAllCtrl = async (req: Request, res: Response) => {
       message: "User",
       user: response,
     });
-  } catch (error: any) {
+  } catch (error) {
+    if(error instanceof Error)
     res.status(500).json({
       error: error.message,
     });
@@ -92,7 +96,8 @@ export const updateProfile = async (req: Request, res: Response) => {
       message: "User profile updated successfully",
       user: user 
     });
-  } catch (error: any) {
+  } catch (error) {
+    if(error instanceof Error)
     res.status(500).json({
       error: error.message,
     });
@@ -122,7 +127,8 @@ export const sendOTP = async (req: Request, res: Response) => {
     const token = generateToken({ email, newOtp });
 
     res.json({ message: "OTP sent successfully", token });
-  } catch (error: any) {
+  } catch (error) {
+    if(error instanceof Error)
     res.status(500).json({
       error: error.message,
     });
@@ -143,7 +149,8 @@ export const verifyOTP = (req: Request, res: Response) => {
     } else {
       res.status(400).json({ message: "Invalid OTP" });
     }
-  } catch (error: any) {
+  } catch (error) {
+    if(error instanceof Error)
     res.status(500).json({
       error: error.message,
     });

@@ -17,7 +17,8 @@ export const createFolderFileService = async (
     });
     const savedFolderFile = await folderFileRepository.save(folderFile);
     return savedFolderFile;
-  } catch (error: any) {
+  }catch (error) {
+    if(error instanceof Error)
     throw new Error(`error ${error.message}`);
   }
 };
@@ -35,7 +36,8 @@ export const deleteFolderFileService = async (id: string) => {
     await folderFileRepository.delete({ id });
 
     return folderFile;
-  } catch (error: any) {
+  }catch (error) {
+    if(error instanceof Error)
     throw new Error(`error ${error.message}`);
   }
 };
@@ -49,7 +51,8 @@ export const getFolderFileService = async (id: string) => {
       throw new Error("Folder File Not Found");
     }
     return folderFile;
-  } catch (error: any) {
+  }catch (error) {
+    if(error instanceof Error)
     throw new Error(`error ${error.message}`);
   }
 };
@@ -61,7 +64,8 @@ export const getAllFolderFileService = async (folderId: string) => {
       throw new Error("No data Found");
     }
     return folder;
-  } catch (error: any) {
+  }catch (error) {
+    if(error instanceof Error)
     throw new Error(`error ${error.message}`);
   }
 };
@@ -75,7 +79,8 @@ export const updateFolderFileService = async (id: string, name: string) => {
     folderFile.name = name || folderFile.name;
     const savedFolderFile = await folderFileRepository.save(folderFile);
     return savedFolderFile;
-  } catch (error: any) {
+  }catch (error) {
+    if(error instanceof Error)
     throw new Error(`error ${error.message}`);
   }
 };

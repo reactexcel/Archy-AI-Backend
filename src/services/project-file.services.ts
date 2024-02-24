@@ -30,7 +30,8 @@ export const createProjectFileService = async (
     const savedProject = await projectFileRepository.save(ProjectFile);
 
     return savedProject;
-  } catch (error: any) {
+  }catch (error) {
+    if(error instanceof Error)
     throw new Error(`error ${error.message}`);
   }
 };
@@ -48,7 +49,8 @@ export const deleteProjectFileService = async (id: string) => {
     await projectFileRepository.delete({ id });
 
     return projectFile;
-  } catch (error: any) {
+  }catch (error) {
+    if(error instanceof Error)
     throw new Error(`error ${error.message}`);
   }
 };
@@ -60,7 +62,8 @@ export const getAllProjectFileService = async (filters: filterInterface) => {
       throw new Error("No data Found");
     }
     return folder;
-  } catch (error: any) {
+  }catch (error) {
+    if(error instanceof Error)
     throw new Error(`error ${error.message}`);
   }
 };
@@ -74,7 +77,8 @@ export const getProjectFileService = async (id: string) => {
       throw new Error("Project File Not Found");
     }
     return folder;
-  } catch (error: any) {
+  }catch (error) {
+    if(error instanceof Error)
     throw new Error(`error ${error.message}`);
   }
 };
@@ -86,7 +90,8 @@ export const getAllFolderByUserIdService = async (filters: filterInterface) => {
       throw new Error("No data Found");
     }
     return folder;
-  } catch (error: any) {
+  } catch (error) {
+    if(error instanceof Error)
     throw new Error(`error ${error.message}`);
   }
 };
@@ -107,7 +112,8 @@ export const updateProjectFileService = async (
     projectFile.isFavourite = isFavourite || projectFile.isFavourite;
     const savedProjectFile = await projectFileRepository.save(projectFile);
     return savedProjectFile;
-  } catch (error: any) {
+  }catch (error) {
+    if(error instanceof Error)
     throw new Error(`error ${error.message}`);
   }
 };

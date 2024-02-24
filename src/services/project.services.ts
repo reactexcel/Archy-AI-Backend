@@ -24,7 +24,8 @@ export const createProjectService = async (
     const savedProject = await projectRepository.save(Project);
     console.table(savedProject);
     return savedProject;
-  } catch (error: any) {
+  }catch (error) {
+    if(error instanceof Error)
     throw new Error(`error ${error.message}`);
   }
 };
@@ -60,7 +61,8 @@ export const getAllProjectService = async (filters: filterInterface) => {
       throw new Error("No data Found");
     }
     return folder;
-  } catch (error: any) {
+  }catch (error) {
+    if(error instanceof Error)
     throw new Error(`error ${error.message}`);
   }
 };
@@ -78,7 +80,8 @@ export const deleteProjectService = async (id: string) => {
     await projectRepository.delete({ id });
 
     return project;
-  } catch (error: any) {
+  }catch (error) {
+    if(error instanceof Error)
     throw new Error(`error ${error.message}`);
   }
 };
@@ -104,7 +107,8 @@ export const updateProjectService = async (
     project.isShared = isShared || project.isShared;
     project.isFavourite = isFavourite || project.isFavourite;
     return await projectRepository.save(project);
-  } catch (error: any) {
+  }catch (error) {
+    if(error instanceof Error)
     throw new Error(`error ${error.message}`);
   }
 };
@@ -125,7 +129,8 @@ export const addOrRemoveProjectToFavouriteByIdService = async (
       project.isFavourite = false;
       return await projectRepository.save(project);
     }
-  } catch (error: any) {
+  }catch (error) {
+    if(error instanceof Error)
     throw new Error(`error ${error.message}`);
   }
 };
